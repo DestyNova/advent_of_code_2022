@@ -21,12 +21,10 @@ This might not be a problem in normal development, since you'd probably build in
 
 The resulting executable is about 10 times bigger in Crystal, although it's not **ludicrously** big:
 
-```
 File | Bytes
 ---  | ---
 part2_crystal | 949600
 part2_nim | 92520
-```
 
 Another interesting note: Nim caches builds, even if you update the source file timestamp. Maybe it stores a checksum/hash of the file -- in fact it indicates this in the compiler output:
 
