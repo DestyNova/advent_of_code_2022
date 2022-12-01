@@ -57,7 +57,7 @@ Maybe I'll come back to this one, but for now I'm not sure how to even read stdi
 
 Today's problem wasn't computationally difficult, so there's not much of interest in these benchmarks. Both implementations ran really quickly. I'm more interested to see the memory usage stats over time as we get to more complex problems: Crystal seems to be very memory efficient (at least, from the perspective of working with JVM languages for years), but Nim is extremely frugal, especially using the new ORC garbage collector, which seems to be more of a "statically generated deallocation + ref counter for cyclical pointers" thing.
 
-Time:
+### Time
 
 ```
 Benchmark 1: ./part2_crystal < input
@@ -72,3 +72,12 @@ Summary
   './part2_nim < input' ran
     2.50 ± 1.71 times faster than './part2_crystal < input'
 ```
+
+(TODO: boxplot)
+
+### Memory
+
+Program | Max RSS (kb)
+---     | ---
+part2_crystal | 3732
+part2_nim | 1744

@@ -1,2 +1,5 @@
-part*_(crystal|nim|vale|ante)
+part*_crystal
+part*_nim
+part*_vale
+part*_ante
 target
