@@ -4,7 +4,7 @@ puts STDIN
       .map { |elf|
         elf
           .split
-          .map { |cals| ("0" + cals).to_i }
+          .map { |cals| cals.to_i }
           .sum
       }
       .sort { |a, b| b <=> a }[0..2]
