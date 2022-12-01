@@ -73,7 +73,7 @@ Summary
     2.50 ± 1.71 times faster than './part2_crystal < input'
 ```
 
-(TODO: boxplot)
+![Boxplot of runtime benchmark results](runtime.png)
 
 ### Memory
 

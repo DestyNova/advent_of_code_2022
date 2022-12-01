@@ -27,3 +27,8 @@ hyperfine --warmup 1 \
   --export-json stats.json
   # "./part${SUFFIX}_vale < input" \
   # "./part${SUFFIX}_ante < input"
+
+echo "Making plots..."
+python3 ../scripts/plot_whisker.py stats.json -o runtime.png
+# Try to reduce PNG size even though it doesn't matter...
+optipng -o7 runtime.png
