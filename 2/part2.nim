@@ -1,5 +1,3 @@
-import strformat
-
 proc getLoseMove(c: char): int =
   case c:
     of 'A': 3
@@ -37,7 +35,6 @@ var score = 0
 for line in stdin.lines:
   if line != "":
     let outcome = getOutcome(line[0], line[2])
-    echo &"outcome: {outcome}"
     score += outcome
 
 echo score
