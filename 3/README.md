@@ -30,6 +30,21 @@ foldl1 :: Foldable t => (a -> a -> a) -> t a -> a
 
 I basically just translated the Crystal solution line by line into Nim, but wasn't sure how best to achieve the `in_groups_of` functionality in Crystal's stdlib, since the input lines needed to be processed in groups of 3. I could have switched to an imperative for-loop with a line counter, but managed to figure something out with the `sequtils.distribute` function even though that felt hacky. Instead of making an unspecified number of N-sized subsequences, `distribute` makes N subsequences of an unspecified size, so integer division was required to convert between the two behaviours.
 
+## Experiments with OpenAI's ChatGPT
+
+After finishing the Nim implementation I tried asking OpenAI's ChatGPT to write a Python solution for the part 1 problem spec. After 5 rounds of "no, it's returning a zero", "there's an error" and similar clues, it produced a working solution.
+
+Then I asked it to translate the solution into Ruby, which worked correctly on the first try. Wow!
+
+Then I asked it to golf the Ruby solution, which it did, but I couldn't get it working.
+Similarly, I asked it to translate the Python version to Lua, but it ran out of space for the answer I guess.
+
+What an amazing tool. I really like how it remembers the context of what you were talking about during the session. When you point out a problem, it'll explain why it thinks the problem happened and how it can be fixed, before outputting the fixed source code. It's obviously not perfect, but I could imagine working with it as a conversation partner and general coding mega-assistant.
+
+There's a limit to how much you can ask it per day, otherwise I'd have spent hours testing its limits, asking it what would happen with certain inputs, how to express things more concisely, generating test cases, finding more efficient versions of algorithms, and so on. I also tried it yesterday and it generated some Nim code, although there were a bunch of errors so it's clearly reliant on a large input corpus.
+
+With all that said, I'm not sure I approve of it being allowed to generate whole programs for competitions. Apparently the top submission on today's scoreboard was done in 10 seconds using ChatGPT, which seems a bit unfair.
+
 ## Benchmarks
 
 As usual, both Nim and Crystal performed well, with Nim coming in very slightly faster. Crystal's build time of 16.7 seconds in release mode dwarfs the 0.6 seconds for Nim, but my `watch-crystal.sh` script compiles in debug mode which takes about 2 seconds.
