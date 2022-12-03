@@ -28,13 +28,13 @@ foldl1 :: Foldable t => (a -> a -> a) -> t a -> a
 
 ### Nim
 
-I basically just translated the Crystal solution line by line into Nim, but wasn't sure how best to achieve the `in_chunks_of` functionality in Crystal's stdlib, since the input lines needed to be processed in groups of 3. I could have switched to an imperative for-loop with a line counter, but managed to figure something out with the `sequtils.distribute` function even though that felt hacky. Instead of making an unspecified number of N-sized subsequences, `distribute` makes N subsequences of an unspecified size, so integer division was required to convert between the two behaviours.
+I basically just translated the Crystal solution line by line into Nim, but wasn't sure how best to achieve the `in_groups_of` functionality in Crystal's stdlib, since the input lines needed to be processed in groups of 3. I could have switched to an imperative for-loop with a line counter, but managed to figure something out with the `sequtils.distribute` function even though that felt hacky. Instead of making an unspecified number of N-sized subsequences, `distribute` makes N subsequences of an unspecified size, so integer division was required to convert between the two behaviours.
 
 ## Benchmarks
 
 As usual, both Nim and Crystal performed well, with Nim coming in very slightly faster. Crystal's build time of 16.7 seconds in release mode dwarfs the 0.6 seconds for Nim, but my `watch-crystal.sh` script compiles in debug mode which takes about 2 seconds.
 
-I found it easier to get the programs written with Crystal today, due to the lack of a `in_chunks_of` function in the Nim stdlib. Both languages caught me out slightly with the need to explicitly convert the stdin lines iterator to a sequence (`to_a` in Crystal, `toSeq` in Nim), I guess to work around some kind of laziness thing.
+I found it easier to get the programs written with Crystal today, due to the lack of a `in_groups_of` function in the Nim stdlib. Both languages caught me out slightly with the need to explicitly convert the stdin lines iterator to a sequence (`to_a` in Crystal, `toSeq` in Nim), I guess to work around some kind of laziness thing.
 
 ### Time
 
