@@ -36,10 +36,15 @@ After finishing the Nim implementation I tried asking OpenAI's ChatGPT to write 
 
 Then I asked it to translate the solution into Ruby, which worked correctly on the first try. Wow!
 
+![Asking ChatGPT to translate the Python program to Ruby](chatgpt_experiments/chat2.png)
+
 Then I asked it to golf the Ruby solution, which it did, but I couldn't get it working.
 Similarly, I asked it to translate the Python version to Lua, but it ran out of space for the answer I guess.
 
 What an amazing tool. I really like how it remembers the context of what you were talking about during the session. When you point out a problem, it'll explain why it thinks the problem happened and how it can be fixed, before outputting the fixed source code. It's obviously not perfect, but I could imagine working with it as a conversation partner and general coding mega-assistant.
+It's the closest thing I've seen so far to the episodes of Star Trek TNG I saw as a teenager where Geordi La Forge or Data would try to solve a problem by asking the computer questions and incrementally refining a hypothesis.
+
+![Telling ChatGPT about a bug](chatgpt_experiments/chat1.png)
 
 There's a limit to how much you can ask it per day, otherwise I'd have spent hours testing its limits, asking it what would happen with certain inputs, how to express things more concisely, generating test cases, finding more efficient versions of algorithms, and so on. I also tried it yesterday and it generated some Nim code, although there were a bunch of errors so it's clearly reliant on a large input corpus.
 
