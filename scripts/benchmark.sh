@@ -32,3 +32,21 @@ echo "Making plots..."
 python3 ../scripts/plot_whisker.py stats.json -o runtime.png
 # Try to reduce PNG size even though it doesn't matter...
 optipng -o7 runtime.png
+
+echo "\nMeasuring peak RSS (Crystal)..."
+time -f "%K %t %M" ./part2_crystal < input
+
+echo "\nMeasuring peak RSS (Nim)..."
+time -f "%K %t %M" ./part2_nim < input
+
+echo "\nRaw size (Crystal)"
+stat -c "%s" part2.cr
+
+echo "\nRaw size (Nim)"
+stat -c "%s" part2.nim
+
+echo "\nGzipped bytes (Crystal)"
+<part2.cr gzip - | wc -c
+
+echo "\nGzipped bytes (Nim)"
+<part2.nim gzip - | wc -c
