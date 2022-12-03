@@ -1,6 +1,6 @@
 printne "Hello!"
-buf = mut malloc 100
-file: Ptr unit = cast @(0: usz)
-s = fgets (ptr_to_ref <| offset buf 0) 10 file
 
-// I have no idea how to read from stdin in Ante either...
+s = read_line ()
+
+printne "...."
+print s
