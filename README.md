@@ -24,7 +24,7 @@ One thing I'm expecting to find more difficult in Nim/Crystal is complex input p
 * Day 1: [Calorie Counting](https://github.com/DestyNova/advent_of_code_2022/blob/main/1/README.md)
 * Day 2: [Rock Paper Scissors](https://github.com/DestyNova/advent_of_code_2022/blob/main/2/README.md)
 * Day 3: [Rucksack Reorganization](https://github.com/DestyNova/advent_of_code_2022/blob/main/3/README.md)
-* Day 4: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/4/README.md)
+* Day 4: [Camp Cleanup](https://github.com/DestyNova/advent_of_code_2022/blob/main/4/README.md)
 * Day 5: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/5/README.md)
 * Day 6: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/6/README.md)
 * Day 7: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/7/README.md)
