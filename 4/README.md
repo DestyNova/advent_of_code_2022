@@ -1,5 +1,5 @@
-# Day 4: [Camp Cleanup](https://adventofcode.com/2022/day/3)
-*Crystal: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/3/part1.nim) (00:09:17, rank 4157), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/3/part2.nim) (00:13:49, rank 4230)*
+# Day 4: [Camp Cleanup](https://adventofcode.com/2022/day/4)
+*Crystal: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/4/part1.nim) (00:09:17, rank 4157), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/4/part2.nim) (00:13:49, rank 4230)*
 
 A very, very easy puzzle.
 
