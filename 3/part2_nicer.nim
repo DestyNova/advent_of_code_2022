@@ -1,4 +1,4 @@
-import setutils,strutils,sequtils
+import strutils,std/setutils,sequtils,math
 
 proc getPriority(lines: seq[string]): int =
   let common = lines.map(toSet).foldl(a * b).toSeq[0]
