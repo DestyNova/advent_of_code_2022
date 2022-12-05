@@ -1,4 +1,4 @@
-import sequtils, strutils, sugar
+import sequtils, strutils
 
 var stacks: seq[seq[char]]
 
@@ -23,4 +23,4 @@ for line in stdin.lines:
       stacks[source-1].delete(0)
     stacks[dest-1] = buf & stacks[dest-1]
 
-echo stacks.map((s: seq[char]) => s[0]).join("")
+echo stacks.mapIt(it[0]).join("")
