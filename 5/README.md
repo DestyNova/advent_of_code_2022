@@ -27,7 +27,7 @@ This time, the working Nim program was slightly shorter than the Crystal one whi
 
 ## Benchmarks
 
-Another very computationally cheap puzzle from which there are no interesting conclusion to be drawn about the various languages implementations.
+Another very computationally cheap puzzle from which there are no interesting conclusions to be drawn about the various language implementations.
 
 ### Time
 
