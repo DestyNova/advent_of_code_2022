@@ -16,9 +16,9 @@ mv part$SUFFIX part${SUFFIX}_nim
 # echo -e "\nBuilding (Vale)..."
 # time valec build --release part$SUFFIX.vale
 # mv part$SUFFIX part${SUFFIX}_vale
-# 
+
 # echo -e "\nBuilding (Ante)..."
-# time ante build --release part$SUFFIX.ante
+# time ../scripts/build-ante.sh part$SUFFIX.an
 # mv part$SUFFIX part${SUFFIX}_ante
 
 echo -e "\n\nBenchmarking..."

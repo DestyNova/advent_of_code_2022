@@ -1,6 +1,0 @@
-printne "Hello!"
-
-s = read_line ()
-
-printne "...."
-print s

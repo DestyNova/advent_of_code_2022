@@ -1,0 +1,33 @@
+import HashMap
+
+impl Hash u8 with hash x = cast x
+
+chunk_size = 14
+
+match read_line ()
+  | None -> ()
+  | Some sp ->
+      s = sp.c_string
+
+      end_pos = (strlen s) - chunk_size - 1
+      loop (i = 0) ->
+        map = mut empty ()
+        // get segfaults if the map is empty, so insert junk first...
+        // but inserting a key of 0 completely breaks the program somehow, causing lookups to fail??
+        // so we insert 1 here instead
+        insert map 1 0
+        dupe = mut false
+
+        loop (j = 0) ->
+          off = offset s (i + j)
+          c = transmute (deref_ptr off)
+          match get_entry (@map) c
+            | Some _ ->
+              dupe := true
+            | _ -> ()
+          insert map c (i + j)
+          if j < chunk_size - 1 then recur (j + 1)
+
+        if @dupe == false
+          then print (i + chunk_size)
+          else if i < end_pos then recur (i + 1)
