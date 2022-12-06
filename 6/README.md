@@ -41,7 +41,7 @@ But by then, we'll probably be onto much more difficult problems where the small
 
 ## Benchmarks
 
-Another very computationally cheap puzzle from which there are no interesting conclusion to be drawn about the various languages implementations.
+Another very computationally cheap puzzle from which there are no interesting conclusions to be drawn about the various language implementations.
 
 ### Time
 
