@@ -86,5 +86,5 @@ Summary
 
 Program | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | Source gzipped
 --- | --- | --- | --- | --- | ---
-part2_crystal | 16.679 | 2.4 | 3784 | 226 | 189
-part2_nim | 0.621 | 1.3 | 1756 | 301 | 225
+part2_crystal | 16.524 | 2.4 | 3784 | 226 | 189
+part2_nim | 1.437 | 1.3 | 1756 | 301 | 225

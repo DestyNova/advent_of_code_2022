@@ -15,7 +15,7 @@ At first I solved this with a minor extension to the part 1 code, but then took 
 
 ### Crystal
 
-Rather than think hard, I just duplicated the Nim part 2 solution and translated it line-by-line into Crystal. I really like the clean, concise syntax this language provides. However I did notice that compile time in release mode is extremely long for such a simple program. Compile + runtime in Nim was 0.65 seconds, while Crystal took 12.84 seconds, basically all of which was compilation.
+Rather than think hard, I just duplicated the Nim part 2 solution and translated it line-by-line into Crystal. I really like the clean, concise syntax this language provides. However I did notice that compile time in release mode is extremely long for such a simple program. Compile time in Nim was 1.373 seconds, while Crystal took 16.746 seconds.
 
 This might not be a problem in normal development, since you'd probably build in debug mode except when... releasing... but it was surprising to me nonetheless. Then again, Crystal requires fewer type annotations than Nim (which requires all functions to have explicitly typed signatures), so it probably has a different and more costly type inference mechanism. However, Haskell's Hindley-Milner inference also allows you to omit function signatures and it does release builds much quicker.
 
@@ -79,5 +79,5 @@ Summary
 
 Program | Max RSS (kb)
 ---     | ---
-part2_crystal | 3732
-part2_nim | 1744
+part2_crystal | 3344
+part2_nim | 1736

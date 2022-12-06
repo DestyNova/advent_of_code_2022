@@ -58,4 +58,4 @@ Program | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | S
 part2_crystal | 16.287 | 2.0 | 3536 | 656 | 349
 part2_nim | 1.428 | 1.2 | 1680 | 627 | 318
 
-Note: I added a line to the benchmark script that explicitly clears the Nim cache first, and the compilation this time is 2-3x slower than previous days, so I probably need to revisit those.
+Note: I added a line to the benchmark script that explicitly clears the Nim cache first, and the compilation this time is 2-3x slower than previous days. Since it clearly makes a difference, I've gone back and redone the compilation time measurements for the previous days.
