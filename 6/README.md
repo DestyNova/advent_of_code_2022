@@ -15,7 +15,13 @@ This was an incredibly small tweak to the first program. In fact if I'd written 
 
 ### Crystal
 
-The problem was simple enough that I decided to implement the Crystal version without referring to my Nim code. However, for one reason or another it still took me a few minutes. It seems obvious to say this now, but... it actually helps a lot to be very familiar and comfortable with the important stdlib modules in whatever languages you're using when speedcoding. I got stuck for 30 seconds so trying to convert the string chunks to a set. I expected something like this would work:
+The problem was simple enough that I decided to implement the Crystal version without referring to my Nim code. However, for one reason or another it still took me a few minutes.
+
+## Thoughts
+
+This is the kind of problem that probably has a 4 or 5 character solution in APL or J. Anyway, I still took a few minutes to get it done, getting some of the ranges wrong (tip: `0..4` is an inclusive range). Otherwise I'm pretty happy with it despite the unimpressive ranking.
+
+It seems obvious to say this now, but... it actually helps a lot to be very familiar and comfortable with the important stdlib modules in whatever languages you're using when speedcoding. I got stuck for 30 seconds when writing the Crystal implementation, trying to convert the string chunks to a set. I expected something like this would work:
 
 ```crystal
 uniq = Set(chunk).size
@@ -29,9 +35,9 @@ But I needed to do this:
 uniq = chunk.chars.to_set.size
 ```
 
-## Thoughts
+In Haskell this kind of thing might be done with `length $ nub chunk`, importing `Data.List (nub)`. It'll probably take quite a few more days of puzzling before I start to learn some of the more common things in Nim and Crystal.
 
-This is the kind of problem that probably has a 4 or 5 character solution in APL or J. Anyway, I still took a few minutes to get it done, getting some of the ranges wrong (tip: `0..4` is an inclusive range). Otherwise I'm pretty happy with it despite the unimpressive ranking.
+But by then, we'll probably be onto much more difficult problems where the small overhead of not knowing the stdlib -- and the time it takes to just read the problem text -- becomes a very small proportion of the total solving time. A couple of the puzzles last year took me over 10 hours in Haskell, so... yeah.
 
 ## Benchmarks
 
