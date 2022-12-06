@@ -2,6 +2,9 @@
 
 SUFFIX=${1:-"2"}
 
+# NOTE: Clear Crystal build cache if it's been populated:
+# rm -r ~/.cache/crystal/*advent-of-code*
+
 echo -e "\nBuilding (Crystal)..."
 time ../scripts/build-crystal.sh part$SUFFIX.cr
 mv part$SUFFIX part${SUFFIX}_crystal
