@@ -63,11 +63,11 @@ Today's problem wasn't computationally difficult, so there's not much of interes
 Benchmark 1: ./part2_crystal < input
   Time (mean ± σ):       2.2 ms ±   0.5 ms    [User: 2.1 ms, System: 1.9 ms]
   Range (min … max):     1.3 ms …   3.8 ms    587 runs
- 
+
 Benchmark 2: ./part2_nim < input
   Time (mean ± σ):       0.9 ms ±   0.6 ms    [User: 0.9 ms, System: 0.5 ms]
   Range (min … max):     0.0 ms …   2.9 ms    1092 runs
- 
+
 Summary
   './part2_nim < input' ran
     2.50 ± 1.71 times faster than './part2_crystal < input'
