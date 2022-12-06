@@ -82,4 +82,4 @@ Program       | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source byt
 ---           | ---              | ---               | ---          | ---          | ---
 part2_crystal | 17.131           | 3.1               | 4012         | 197          | 146
 part2_nim     | 1.068            | 1.1               | 1640         | 218          | 157
-part2_ante    | 0.174            | 4.1               | 3680         | 905          | 440
+part2_ante    | 0.174            | 4.1               | 3680         | 683          | 337
