@@ -41,7 +41,7 @@ SUM:                            56            319            116          20227
 * Day 4: [Camp Cleanup](https://github.com/DestyNova/advent_of_code_2022/blob/main/4)
 * Day 5: [Supply Stacks](https://github.com/DestyNova/advent_of_code_2022/blob/main/5)
 * Day 6: [Tuning Trouble](https://github.com/DestyNova/advent_of_code_2022/blob/main/6)
-* Day 7: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/7)
+* Day 7: [No Space Left On Device](https://github.com/DestyNova/advent_of_code_2022/blob/main/7)
 * Day 8: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/8)
 * Day 9: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/9)
 * Day 10: [???](https://github.com/DestyNova/advent_of_code_2022/blob/main/10)
