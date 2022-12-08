@@ -16,17 +16,16 @@ var
   index = 1
   sizes = newSeq[int]()
 
-proc getDirSize(d: Dir): int =
+func getDirSize(d: Dir): int =
   d.files + d.dirs.map(getDirSize).sum
 
 proc readDir(name: string, inp: seq[string]): Dir =
-  var deeperDir: string
-
   var dirFileSize = 0
   var subDirs = newSeq[Dir]()
 
   for i in 1..500:
     var nextLine = (if index >= inp.len: "" else: inp[index])
+    var deeperDir: string
 
     if nextLine == "$ cd .." or nextLine == "":
       index += 1
