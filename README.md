@@ -43,7 +43,7 @@ SUM:                            56            319            116          20227
 * Day 6: [Tuning Trouble](https://github.com/DestyNova/advent_of_code_2022/blob/main/6)
 * Day 7: [No Space Left On Device](https://github.com/DestyNova/advent_of_code_2022/blob/main/7)
 * Day 8: [Treetop Tree House](https://github.com/DestyNova/advent_of_code_2022/blob/main/8)
-* Day 9: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/9)
+* Day 9: [Rope Bridge](https://github.com/DestyNova/advent_of_code_2022/blob/main/9)
 * Day 10: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/10)
 * Day 11: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/11)
 * Day 12: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/12)
