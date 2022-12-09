@@ -1,5 +1,5 @@
 # Day 8: [Treetop Tree House](https://adventofcode.com/2022/day/8)
-*Crystal: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/8/part1.nim) (00:30:36, rank 5666), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/8/part2.nim) (00:55:37, rank 5842)*
+*Crystal: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/8/part1.cr) (00:30:36, rank 5666), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/8/part2.cr) (00:55:37, rank 5842)*
 
 Column/row analytics in a grid of trees.
 
@@ -22,6 +22,8 @@ I couldn't for the life of me figure out a nice way to do this, and ended up add
 ## Thoughts
 
 Dunno what to say about this one. It's my worst ranking so far and really is an easy problem when you think about it. I probably should have stuck with Nim and just used plain old imperative for loops, which might have kept me away from the mess I made with `take_while`.
+
+I started trying to tidy it up in `part2_less_shame.cr` but it ain't working. Might come back to it, if I happen to read this again and remember...
 
 ## Benchmarks
 
