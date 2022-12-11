@@ -1,4 +1,4 @@
-import std/strutils, std/sequtils, std/strscans, std/strformat, std/algorithm
+import std/[algorithm, sequtils, strformat, strscans, strutils]
 
 type Monkey = object
   n: int
