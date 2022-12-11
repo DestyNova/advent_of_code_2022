@@ -2,7 +2,7 @@ import std/strutils, std/sequtils, std/strscans, std/strformat, std/algorithm
 
 type Monkey = object
   n: int
-  starting: seq[int]
+  held: seq[int]
   op: char
   opVal: string
   check: int
@@ -36,7 +36,15 @@ for m in stdin.readAll.strip.split("\n\n"):
   assert scanf(ls[4], "    If true: throw to monkey $i", checkT)
   assert scanf(ls[5], "    If false: throw to monkey $i", checkF)
 
-  let monkey = Monkey(n: name, starting: objs.split(", ").map(parseInt), op: op, opVal: opVal, check: check, checkT: checkT, checkF: checkF, inspections: 0)
+  let monkey = Monkey(
+    n: name,
+    held: objs.split(", ").map(parseInt),
+    op: op,
+    opVal: opVal,
+    check: check,
+    checkT: checkT,
+    checkF: checkF,
+    inspections: 0)
   monkeys.add(monkey)
 
 let megaCheck = monkeys.mapIt(it.check).foldl(a*b)
@@ -46,10 +54,10 @@ for round in 1..rounds:
 
   for m in monkeys.mitems:
 
-    while m.starting.len > 0:
+    while m.held.len > 0:
       m.inspections += 1
-      let worry = m.starting[0]
-      m.starting.delete(0)
+      let worry = m.held[0]
+      m.held.delete(0)
 
       let opVal = case m.opVal:
                     of "old": worry
@@ -63,7 +71,7 @@ for round in 1..rounds:
       let w2 = w mod megaCheck
 
       let target = if w2 mod m.check == 0: m.checkT else: m.checkF
-      monkeys[target].starting.add(w2)
+      monkeys[target].held.add(w2)
 
 let inspections = monkeys.mapIt(it.inspections)
 echo fmt"inspections: {inspections}"
