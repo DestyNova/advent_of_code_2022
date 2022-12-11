@@ -10,8 +10,7 @@ type Monkey = object
   checkF: int
   inspections: int
 
-var
-    monkeys: seq[Monkey] = @[]
+var monkeys: seq[Monkey] = @[]
 
 for m in stdin.readAll.strip.split("\n\n"):
   let ls = m.split("\n")
@@ -20,18 +19,13 @@ for m in stdin.readAll.strip.split("\n\n"):
     objs: string
     op: char
     opVal: string
-    opInt: int
     check: int
     checkT: int
     checkF: int
 
   assert scanf(ls[0], "Monkey $i:", name)
   assert scanf(ls[1], "  Starting items: $+", objs)
-
-  if scanf(ls[2], "  Operation: new = old $c $i", op, opInt):
-    opVal = $opInt
-  else:
-    assert scanf(ls[2], "  Operation: new = old $c $w", op, opVal)
+  assert scanf(ls[2], "  Operation: new = old $c $+", op, opVal)
   assert scanf(ls[3], "  Test: divisible by $i", check)
   assert scanf(ls[4], "    If true: throw to monkey $i", checkT)
   assert scanf(ls[5], "    If false: throw to monkey $i", checkF)
