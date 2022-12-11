@@ -44,8 +44,7 @@ let megaCheck = monkeys.mapIt(it.check).foldl(a*b)
 let rounds = 10000
 for round in 1..rounds:
 
-  for i in 0..monkeys.len-1:
-    var m = monkeys[i]
+  for m in monkeys.mitems:
 
     while m.starting.len > 0:
       m.inspections += 1
@@ -65,8 +64,6 @@ for round in 1..rounds:
 
       let target = if w2 mod m.check == 0: m.checkT else: m.checkF
       monkeys[target].starting.add(w2)
-
-    monkeys[i] = m        # why do we have to reassign this?? was it a copy?
 
 let inspections = monkeys.mapIt(it.inspections)
 echo fmt"inspections: {inspections}"
