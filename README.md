@@ -46,7 +46,7 @@ SUM:                            73            483            126          24705
 * Day 9: [Rope Bridge](https://github.com/DestyNova/advent_of_code_2022/blob/main/9)
 * Day 10: [Cathode-Ray Tube](https://github.com/DestyNova/advent_of_code_2022/blob/main/10)
 * Day 11: [Monkey in the Middle](https://github.com/DestyNova/advent_of_code_2022/blob/main/11)
-* Day 12: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/12)
+* Day 12: [Hill Climbing Algorithm](https://github.com/DestyNova/advent_of_code_2022/blob/main/12)
 * Day 13: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/13)
 * Day 14: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/14)
 * Day 15: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/15)
