@@ -16,20 +16,20 @@ One thing I'm expecting to find more difficult in Nim/Crystal is complex input p
 ## Current code stats with [cloc](https://github.com/AlDanial/cloc)
 
 ```
-github.com/AlDanial/cloc v 1.90  T=0.05 s (1568.6 files/s, 499779.2 lines/s)
+github.com/AlDanial/cloc v 1.90  T=0.08 s (1159.1 files/s, 376771.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-JSON                            10              0              0          23654
-Nim                             22            190             23            774
-Markdown                        13            284              0            484
+JSON                            11              0              0          25762
+Nim                             26            248             27           1003
+Markdown                        14            312              0            536
 Crystal                         12             33              2            198
 Python                           6             51             65            108
 Bourne Shell                    10             36             14             74
 Lua                              2             16             24             55
 Ruby                             7              8             12             22
 -------------------------------------------------------------------------------
-SUM:                            82            618            140          25369
+SUM:                            88            704            144          27758
 -------------------------------------------------------------------------------
 ```
 
