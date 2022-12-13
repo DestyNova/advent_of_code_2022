@@ -47,7 +47,7 @@ SUM:                            82            618            140          25369
 * Day 10: [Cathode-Ray Tube](https://github.com/DestyNova/advent_of_code_2022/blob/main/10)
 * Day 11: [Monkey in the Middle](https://github.com/DestyNova/advent_of_code_2022/blob/main/11)
 * Day 12: [Hill Climbing Algorithm](https://github.com/DestyNova/advent_of_code_2022/blob/main/12)
-* Day 13: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/13)
+* Day 13: [Distress Signal](https://github.com/DestyNova/advent_of_code_2022/blob/main/13)
 * Day 14: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/14)
 * Day 15: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/15)
 * Day 16: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/16)
