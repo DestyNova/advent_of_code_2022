@@ -27,14 +27,24 @@ This again turned out to be a small extension of part 1, although I was initiall
 
 Yet another mediocre performance where reading comprehension was possibly the most difficult part. Also, another reminder: start with dumb, easy-to-use data structures like `seq[seq[char]]`. In fact I could probably have even stored everything in a mutble hashtable and not even bothered finding the min/max bounds first. Nim is pretty fast.
 
+**Update:** Out of curiosity I tried this out and indeed there's a 7x performance hit, but the program still runs in less than 100 ms in release mode, vs about 13 ms for the version with a `seq[seq[char]]`. Wow.
+
 ## Benchmarks
 
 ### Time
 
 ```
 Benchmark 1: ./part2 < input
-  Time (mean ± σ):     201.7 ms ±   5.6 ms    [User: 199.5 ms, System: 2.3 ms]
-  Range (min … max):   192.8 ms … 211.1 ms    15 runs
+  Time (mean ± σ):      12.9 ms ±   1.7 ms    [User: 11.7 ms, System: 1.4 ms]
+  Range (min … max):     8.9 ms …  18.2 ms    205 runs
+ 
+Benchmark 2: ./part2_hashtable < input
+  Time (mean ± σ):      85.4 ms ±   5.1 ms    [User: 82.2 ms, System: 3.2 ms]
+  Range (min … max):    77.0 ms …  92.1 ms    32 runs
+ 
+Summary
+  './part2 < input' ran
+    6.60 ± 0.95 times faster than './part2_hashtable < input'
 ```
 
 ![Boxplot of runtime benchmark results](runtime.png)
@@ -43,5 +53,5 @@ Benchmark 1: ./part2 < input
 
 Program       | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | Source gzipped
 ---           | ---              | ---               | ---          | ---          | ---
-part2_crystal |                  |                   |              |              |    
-part2_nim     |                  |                   |              |              |    
+part2_nim     | ~1.5             | 12.9              | 1804         | 2076         | 926
+part2_nimtable| ~1.5             | 85.4              | 5804         | 2085         | 935
