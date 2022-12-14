@@ -9,8 +9,7 @@ var
 
 for line in stdin.lines:
   let coords = line.split(" -> ").mapIt(it.split(",").map(parseInt))
-  # echo fmt"line: {line}"
-  # echo coords
+
   for i in 0..coords.len-2:
     let
       x1 = coords[i][0]
@@ -25,23 +24,16 @@ for line in stdin.lines:
 
     segments.add((x1, y1, x2, y2))
 
-echo fmt"bounds: {@[minX,maxX,0,maxY]}"
 var g = newSeqWith(maxY+1, newSeq[char](maxX+1))
 
 for (x1,y1,x2,y2) in segments:
     # add block for each discrete point along line
-    echo fmt"processing {(x1,y1)} .. {(x2,y2)}"
     if x1 == x2:
       # vertical line
-      for y in min(y1, y2)..max(y1, y2):
-        echo fmt"writing vert block to {x1}, {y}"
-        g[y][x1] = '#'
+      for y in min(y1, y2)..max(y1, y2): g[y][x1] = '#'
     else:
       # horizontal
-      for x in min(x1, x2)..max(x1, x2):
-        echo fmt"writing horiz block to {x}, {y1}"
-        g[y1][x] = '#'
-# display g
+      for x in min(x1, x2)..max(x1, x2): g[y1][x] = '#'
 
 proc displayCave() =
   for j in minY..maxY:
@@ -55,7 +47,7 @@ proc displayCave() =
 var sand = 0
 
 while true:
-  echo fmt"Units of sand dropped: {sand}"
+  # echo fmt"Units of sand dropped: {sand}"
   # displayCave()
   
   var
@@ -78,7 +70,6 @@ while true:
     # else came to rest, write final position
     else:
       g[y][x] = 'o'
-      echo fmt"placed sand at {x},{y}"
       overflowed = false
       break
 
