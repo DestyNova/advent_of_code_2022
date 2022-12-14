@@ -7,6 +7,14 @@ var
   maxY = 0
   segments: seq[tuple[x1,y1,x2,y2: int]]
 
+proc displayCave(g: seq[seq[char]]) =
+  for j in minY..maxY:
+    stdout.write('|')
+    for i in minX..maxX:
+      let c = g[j][i]
+      stdout.write(if c == '\0': '.' else: c)
+    echo "|"
+
 for line in stdin.lines:
   let coords = line.split(" -> ").mapIt(it.split(",").map(parseInt))
   # echo fmt"line: {line}"
@@ -44,15 +52,7 @@ for (x1,y1,x2,y2) in segments:
       # horizontal
       for x in min(x1, x2)..max(x1, x2): g[y1][x] = '#'
 
-proc displayCave() =
-  for j in minY..maxY:
-    stdout.write('|')
-    for i in minX..maxX:
-      let c = g[j][i]
-      stdout.write(if c == '\0': '.' else: c)
-    echo "|"
-
-# do updates
+# Run simulation
 var sand = 0
 
 while true:
@@ -65,21 +65,20 @@ while true:
     overflowed = true
 
   while x in minX..maxX and y in minY..maxY-1:
-    # try to insert 1 block of sand at x,y+1
+    # see if we can insert 1 block of sand at x,y+1
     if g[y+1][x] == '\0':
       y = y+1
-    # if not blank, then x-1,y+1
+    # if not, maybe x-1,y+1
     elif g[y+1][x-1] == '\0':
       x = x-1
       y = y+1
-    # if not blank, then x+1,y+1
+    # if not, maybe x+1,y+1
     elif g[y+1][x+1] == '\0':
       x = x+1
       y = y+1
-    # else came to rest, write final position
+    # otherwise it came to rest; write final position
     else:
       g[y][x] = 'o'
-      # echo fmt"placed sand at {x},{y}"
       overflowed = false
       break
 
