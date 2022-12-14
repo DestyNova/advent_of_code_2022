@@ -1,4 +1,4 @@
-import std/[sequtils, strformat, strutils, tables]
+import std/[os, sequtils, strformat, strutils, tables]
 
 var
   minX = 500 # don't know the bounds yet
@@ -7,9 +7,8 @@ var
   maxY = 0
   segments: seq[tuple[x1,y1,x2,y2: int]]
 
-for line in stdin.lines:
+for line in readFile(paramStr(1)).strip.splitLines:
   let coords = line.split(" -> ").mapIt(it.split(",").map(parseInt))
-  # echo fmt"line: {line}"
   # echo coords
   for i in 0..coords.len-2:
     let

@@ -34,24 +34,30 @@ Yet another mediocre performance where reading comprehension was possibly the mo
 ### Time
 
 ```
-Benchmark 1: ./part2 < input
-  Time (mean ± σ):      12.9 ms ±   1.7 ms    [User: 11.7 ms, System: 1.4 ms]
-  Range (min … max):     8.9 ms …  18.2 ms    205 runs
+Benchmark 1: ./part2 input
+  Time (mean ± σ):      11.1 ms ±   1.9 ms    [User: 10.2 ms, System: 0.6 ms]
+  Range (min … max):     8.1 ms …  16.8 ms    349 runs
  
-Benchmark 2: ./part2_hashtable < input
-  Time (mean ± σ):      85.4 ms ±   5.1 ms    [User: 82.2 ms, System: 3.2 ms]
-  Range (min … max):    77.0 ms …  92.1 ms    32 runs
+Benchmark 2: ./part2_hashtable input
+  Time (mean ± σ):      81.3 ms ±   5.3 ms    [User: 79.3 ms, System: 1.7 ms]
+  Range (min … max):    75.8 ms …  89.5 ms    37 runs
+ 
+Benchmark 3: ./part2_array input
+  Time (mean ± σ):      10.4 ms ±   1.6 ms    [User: 9.7 ms, System: 0.5 ms]
+  Range (min … max):     7.1 ms …  15.7 ms    369 runs
  
 Summary
-  './part2 < input' ran
-    6.60 ± 0.95 times faster than './part2_hashtable < input'
+  './part2_array input' ran
+    1.07 ± 0.24 times faster than './part2 input'
+    7.80 ± 1.28 times faster than './part2_hashtable input'
 ```
 
 ![Boxplot of runtime benchmark results](runtime.png)
 
 ### Summary
 
-Program       | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | Source gzipped
----           | ---              | ---               | ---          | ---          | ---
-part2_nim     | ~1.5             | 12.9              | 1804         | 2076         | 926
-part2_nimtable| ~1.5             | 85.4              | 5804         | 2085         | 935
+Program             | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | Source gzipped
+---                 | ---              | ---               | ---          | ---          | ---
+part2_nim           | ~1.5             | 11.1              | 1836         | 2092         | 948
+part2_nim_hashtable | ~1.5             | 81.3              | 5864         | 2089         | 948
+part2_nim_array     | ~1.4             | 10.4              | 1940         | 2080         | 941

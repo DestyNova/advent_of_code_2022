@@ -38,7 +38,8 @@ maxY = maxY + 2
 minX = 500 - maxY
 maxX = 500 + maxY
 
-var g = newSeqWith(maxY+1, newSeq[char](maxX+1))
+var g: array[600, array[1000, char]]
+
 # part 2: add floor
 for x in minX..maxX:
   g[maxY][x] = '#'
@@ -91,4 +92,3 @@ while true:
   if (x,y) == (500,0):
     echo fmt"Blocked the source point after dropping {sand} units of sand"
     quit()
-
