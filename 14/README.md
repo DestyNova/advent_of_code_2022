@@ -9,7 +9,15 @@ So that wasted a few minutes before I gave up and stored it all in a `seq[seq[ch
 
 ## Part 2
 
-This again turned out to be a small extension of part 1, although I was initially struck by a fear that sand would flow out the sides and I'd have to either extend everything horizontally, or do some kind of heuristic grid calculation when things flow out the edges. Then I realised the pile of sand couldn't be wider than it is tall, and we know how tall it is, so I just extended the left and right edges to fit that. In fact I probably extended them too far -- I guess the X bounds should be (500 +/- maxY div 2). Maybe I'll update that now.
+This again turned out to be a small extension of part 1, although I was initially struck by a fear that sand would flow out the sides and I'd have to either extend everything horizontally, or do some kind of heuristic grid calculation when things flow out the edges. Then I realised the pile of sand couldn't be wider than it is tall, and we know how tall it is, so I just extended the left and right edges to fit that. In fact I probably ~extended them too far -- I guess the X bounds should be (500 +/- maxY div 2)~. Maybe I'll update that now.
+
+**Update:** No, that's a fail. A quick look at the pyramid of sand will show that its width is equal to twice its height + 1:
+
+```
+...o...
+..ooo..
+.ooooo.
+```
 
 ## Alternate implementations
 
