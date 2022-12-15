@@ -31,7 +31,7 @@ Yet another mediocre performance where reading comprehension was possibly the mo
 
 ## Benchmarks
 
-### Time
+### Time (`-d:release --gc:orc`)
 
 ```
 Benchmark 1: ./part2 input
@@ -51,6 +51,29 @@ Summary
     1.07 ± 0.24 times faster than './part2 input'
     7.80 ± 1.28 times faster than './part2_hashtable input'
 ```
+
+### Time (`-d:danger --gc:none`)
+
+```
+Benchmark 1: ./part2 input
+  Time (mean ± σ):       7.7 ms ±   1.3 ms    [User: 6.6 ms, System: 0.9 ms]
+  Range (min … max):     5.3 ms …  12.2 ms    403 runs
+ 
+Benchmark 2: ./part2_hashtable input
+  Time (mean ± σ):      70.1 ms ±   4.3 ms    [User: 67.7 ms, System: 2.2 ms]
+  Range (min … max):    61.4 ms …  76.0 ms    40 runs
+ 
+Benchmark 3: ./part2_array input
+  Time (mean ± σ):       9.1 ms ±   1.3 ms    [User: 7.9 ms, System: 0.9 ms]
+  Range (min … max):     6.3 ms …  13.3 ms    421 runs
+ 
+Summary
+  './part2 input' ran
+    1.18 ± 0.26 times faster than './part2_array input'
+    9.14 ± 1.59 times faster than './part2_hashtable input'
+```
+
+That's right; the array version is actually a bit slower in "danger" with GC turned off. In fact `gc:none` is slower than `gc:orc` -- about twice as slow when in release mode even, which is a bit surprising. I tested a few other combos of compiler settings, and found that the `markAndSweep` and `boehm` GC options also produce a slower array version in danger mode.
 
 ![Boxplot of runtime benchmark results](runtime.png)
 
