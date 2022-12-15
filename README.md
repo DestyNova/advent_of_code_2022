@@ -16,20 +16,20 @@ One thing I'm expecting to find more difficult in Nim/Crystal is complex input p
 ## Current code stats with [cloc](https://github.com/AlDanial/cloc)
 
 ```
-github.com/AlDanial/cloc v 1.90  T=0.08 s (1136.8 files/s, 356703.3 lines/s)
+github.com/AlDanial/cloc v 1.90  T=0.08 s (1196.0 files/s, 373234.0 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-JSON                            12              0              0          25810
-Nim                             28            278             52           1123
-Markdown                        15            327              0            560
+JSON                            13              0              0          27390
+Nim                             33            335             80           1379
+Markdown                        16            362              0            632
 Crystal                         12             33              2            198
 Python                           6             51             65            108
 Bourne Shell                    10             36             14             74
 Lua                              2             16             24             55
 Ruby                             7              8             12             22
 -------------------------------------------------------------------------------
-SUM:                            92            749            169          27950
+SUM:                            99            841            197          29858
 -------------------------------------------------------------------------------
 ```
 
@@ -49,7 +49,7 @@ SUM:                            92            749            169          27950
 * Day 12: [Hill Climbing Algorithm](https://github.com/DestyNova/advent_of_code_2022/blob/main/12)
 * Day 13: [Distress Signal](https://github.com/DestyNova/advent_of_code_2022/blob/main/13)
 * Day 14: [Regoith Reservoir](https://github.com/DestyNova/advent_of_code_2022/blob/main/14)
-* Day 15: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/15)
+* Day 15: [Beacon Exclusion Zone](https://github.com/DestyNova/advent_of_code_2022/blob/main/15)
 * Day 16: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/16)
 * Day 17: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/17)
 * Day 18: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/18)
