@@ -1,4 +1,4 @@
-import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue, tables, sugar, math]
+import std/[algorithm, sequtils, strformat]
 
 const W = 7
 type Coord = (int,int)
@@ -37,7 +37,6 @@ let
   topRow = maxY + 4
   newRows = topRow - g.len
 for j in 0..newRows:
-  echo fmt"adding row #{j}"
   g.add(newSeq[bool](W))
 
 echo fmt"g: {g.len}"
@@ -131,7 +130,4 @@ for step in 0..2021:
   let oldMaxY = maxY
   maxY = max(maxY, pos[1] + 1)
   echo fmt"pos now: {pos}. old max y: {oldMaxY}, new: {maxY}"
-  for j in oldMaxY..maxY:
-    echo "adding 1 row"
-    g.add(newSeq[bool](W))
-    # no line removal yet, just pile up
+  for j in oldMaxY..maxY: g.add(newSeq[bool](W))
