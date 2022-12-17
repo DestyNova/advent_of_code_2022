@@ -5,7 +5,7 @@ type Vertex = (bool,int8,int,int8,int)
 
 var valveNames: Table[string, (int, seq[string], int8)]
 var valves: Table[int8, (int, seq[int8])]
-var useless: set[int8]
+var useless: int
 
 proc encodeValves(keys: seq[int8]): int =
   var x = 0
@@ -29,8 +29,33 @@ proc getNeighbours(v: Vertex): seq[(Vertex,string)] =
     vs.add(((p1, valve, m*flowRate + released, m, unturned.without(valve)), fmt"T {valve}"))
   # move
   for n in ns:
-      vs.add(((p1, n, released, m, unturned), fmt"> {n}"))
+    vs.add(((p1, n, released, m, unturned), fmt"> {n}"))
   return vs
+
+proc getApproximateOptimum(p1: bool, unturned: int, mins: int): int =
+  let rates = collect(
+    for k in 0..63:
+      if unturned.holds(int8(k)):
+        (k,valves[int8(k)][0])
+    ).sortedByIt(-it[1])
+
+  var
+    acc = 0
+    m = mins - 1
+    eM = 25
+    i = 0
+    playerOffset = if p1: 26-m else: 0
+    n = len(rates)
+  while i < n and (m > 0 or eM > 0):
+    if p1:
+      # elephant probably has more minutes
+      acc += rates[i][1]*eM
+    if m > 0 and i + playerOffset < n:
+      acc += rates[i+playerOffset][1]*m
+    m -= 2
+    eM -= 2
+    i += 1
+  acc
 
 var dp = initTable[Vertex, int]()
 var bestReleased = low(int)
@@ -38,10 +63,13 @@ var bestReleased = low(int)
 proc dfs(start: Vertex): int =
   # echo fmt"running dfs with {start}"
   var
-    maxReleased = low(int)
     (p1, _, released, mins, unturned) = start
+    maxReleased = released
 
   if start in dp: return dp[start]
+
+  elif released + getApproximateOptimum(p1, unturned, mins) < bestReleased:
+    return released
 
   elif mins <= 1:
     if p1:
@@ -49,7 +77,7 @@ proc dfs(start: Vertex): int =
         startValve = valveNames["AA"][2]
         p2Start: Vertex = (false,startValve,released,int8(26),unturned)
         res = dfs(p2Start)
-      # dp[start] = res
+      dp[start] = res
       return res
     else:
       # dp[start] = released
@@ -60,20 +88,21 @@ proc dfs(start: Vertex): int =
   #   echo fmt"Step {step}: queue size: {n}, maxReleased: {maxReleased}"
   # inc step
 
-  for (u,nextMove) in getNeighbours(start):
-    # echo fmt"recursing with neighbour {u}, nextMove {nextMove}"
-    let
-      uReleased = dfs(u)
+  if useless != unturned:
+    for (u,nextMove) in getNeighbours(start):
+      # echo fmt"recursing with neighbour {u}, nextMove {nextMove}"
+      let
+        uReleased = dfs(u)
 
-    # echo fmt"u: {u}, uReleased: {uReleased}, maxReleased: {maxReleased}, best ever: {bestReleased}"
-    if uReleased > maxReleased:
-      maxReleased = uReleased
-      if maxReleased > bestReleased:
-        bestReleased = maxReleased
-        echo fmt"new best neighbour u: {u}, maxReleased: {maxReleased}"
+      # echo fmt"u: {u}, uReleased: {uReleased}, maxReleased: {maxReleased}, best ever: {bestReleased}"
+      if uReleased > maxReleased:
+        maxReleased = uReleased
+        if maxReleased > bestReleased:
+          bestReleased = maxReleased
+          echo fmt"new best neighbour u: {u}, maxReleased: {maxReleased}"
 
   let res = maxReleased
-  if mins > 5:
+  if mins > 3 or p1:
     dp[start] = res
   res
 
@@ -90,6 +119,10 @@ for line in stdin.lines:
   echo fmt"valve: {valve}, flowRate: {flowRate}, destinations: {destinations}"
 
   valveNames[valve] = (flowRate, destinations.split(", "), i)
+  # add to useless set
+  if flowRate == 0:
+    echo fmt"crappy valve: {i}"
+    useless = useless or (1 shl i)
   i += 1
 
 for k,v in valveNames:
@@ -107,3 +140,6 @@ echo fmt"neighbours of start node: {getNeighbours(start)}"
 echo fmt"starting unturned: {valves.keys.toSeq}"
 echo dfs(start)
 echo fmt"Initial state: {valves.keys.toSeq} => {encodeValves(valves.keys.toSeq):#b}"
+echo fmt"Useless: {useless:#b}"
+echo fmt"approx quality at start: {getApproximateOptimum(true,encodeValves(valves.keys.toSeq),26)}"
+echo fmt"approx quality for elephant: {getApproximateOptimum(false,encodeValves(valves.keys.toSeq),26)}"
