@@ -1,19 +1,19 @@
 import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue, tables, sugar, math]
 
 # vertex needs to encode whether it's player 1 or 2's turn, current valve, pressure released, mins remaining and unturned valves
-type Vertex = (bool,int,int,int,int)
-const Inf = high(int)
+type Vertex = (bool,int8,int,int8,int)
 
-var valveNames: Table[string, (int, seq[string], int)]
-var valves: Table[int, (int, seq[int])]
+var valveNames: Table[string, (int, seq[string], int8)]
+var valves: Table[int8, (int, seq[int8])]
+var useless: set[int8]
 
-proc encodeValves(keys: seq[int]): int =
+proc encodeValves(keys: seq[int8]): int =
   var x = 0
   for i in keys: x = x or (1 shl i)
   x
 
-proc holds(x, key: int): bool = (x and (1 shl key)) != 0
-proc without(x: int, key: int): int = x xor (1 shl key)
+proc holds(x: int, key: int8): bool = (x and (1 shl key)) != 0
+proc without(x: int, key: int8): int = x xor (1 shl key)
 
 proc getNeighbours(v: Vertex): seq[(Vertex,string)] =
   let
@@ -33,12 +33,12 @@ proc getNeighbours(v: Vertex): seq[(Vertex,string)] =
   return vs
 
 var dp = initTable[Vertex, int]()
-var bestReleased = -Inf
+var bestReleased = low(int)
 
 proc dfs(start: Vertex): int =
   # echo fmt"running dfs with {start}"
   var
-    maxReleased = -Inf
+    maxReleased = low(int)
     (p1, _, released, mins, unturned) = start
 
   if start in dp: return dp[start]
@@ -47,12 +47,12 @@ proc dfs(start: Vertex): int =
     if p1:
       let
         startValve = valveNames["AA"][2]
-        p2Start: Vertex = (false,startValve,released,26,unturned)
+        p2Start: Vertex = (false,startValve,released,int8(26),unturned)
         res = dfs(p2Start)
-      dp[start] = res
+      # dp[start] = res
       return res
     else:
-      dp[start] = released
+      # dp[start] = released
       return released
 
   # if step mod 100000 == 0:
@@ -73,10 +73,11 @@ proc dfs(start: Vertex): int =
         echo fmt"new best neighbour u: {u}, maxReleased: {maxReleased}"
 
   let res = maxReleased
-  dp[start] = res
+  if mins > 5:
+    dp[start] = res
   res
 
-var i = 0
+var i: int8 = 0
 for line in stdin.lines:
   var
     valve: string
@@ -101,7 +102,7 @@ let
   # start: Vertex = ("AA","AA",0,26,valves.keys.toSeq.toHashSet,moves)
   startValve = valveNames["AA"][2]
   # start: Vertex = (startValve,startValve,0,26,encodeValves(valves.keys.toSeq))
-  start: Vertex = (true,startValve,0,26,encodeValves(valves.keys.toSeq))
+  start: Vertex = (true,startValve,0,int8(26),encodeValves(valves.keys.toSeq))
 echo fmt"neighbours of start node: {getNeighbours(start)}"
 echo fmt"starting unturned: {valves.keys.toSeq}"
 echo dfs(start)
