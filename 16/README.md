@@ -1,5 +1,5 @@
-# Day 17: [Proboscidea Volcanium](https://adventofcode.com/2022/day/17)
-*Nim: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/17/part1.nim) (02:43:52, rank 2605), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/17/part2.nim) (08:20:36, rank 3222)*
+# Day 16: [Proboscidea Volcanium](https://adventofcode.com/2022/day/17)
+*Nim: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/16/part1.nim) (02:43:52, rank 2605), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/16/part2.nim) (08:20:36, rank 3222)*
 
 NAAAAAY!!!
 
@@ -28,8 +28,12 @@ After a long time, I tried adding some weighting to the comparator function (`<`
 
 I revisited the DFS + dyamic programming approach and split the player/elephant moves into two completely separate segments, searching the player's moves first, then resetting time to 26 and running with the elephant but keeping the updated pressure and unturned valve set. Unfortunately it still gets stuck and the DP table fills up very quickly and is eventually forcibly killed by the kernel's OOM checker.
 
-I'll revisit it but not sure what to change, other than just trying one of the other approaches I read about.
+**Update 2022-12-17 10:08:** I added the heuristic evaluation function to the DFS/DP implementation, to little effect, then realised the heuristic evaluation function was bad: it was pairing up the highest pressure valves and having the elephant and player turn them in sequence. This made sense for the BFS approach where I was doing them in parallel, but for the DFS solution I'd separated out the player and elephant phases into different vertices. The heuristic value then should always have the character with the most remaining time turn valves. To do this I added an offset to the player of `26 - remaining minutes + 1`, so even with 26 minutes remaining, the elephant goes first and turns the highest-value valve (downsorted valve index `i=0`), followed by the player (turning the `(i+playerOffset)`-most valuable valve, if he had enough remaining minutes. We then increment `i` and continue until we've run out of time and/or valves.
+
+This was still really slow, but produced the correct answer after about 30 seconds and eventually terminated, concluding that it was indeed correct, after 267 seconds.
 
 ## Thoughts
 
 Definitely the most difficult puzzle. It's not that the concept of graph search is difficult; it's the actual details of how to represent the state in each vertex, which bits you care about, how to encode for storage in a DP table (e.g. some people managed to pack everything into an int, but I was already using one int for the valve set, another for the pressure released, an int8 for the current valve etc).
+
+I might come back to this one to try alternate approaches (and Picat).
