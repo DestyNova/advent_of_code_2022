@@ -1,9 +1,5 @@
 import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue, tables, sugar, math]
 
-# cost of moving = 1
-# cost of turning valve V (iff V off) = 1 - T*Flow[V]
-# negative costs: do bfs?
-
 # vertex needs to encode valve label, pressure released, mins remaining and table of turned??
 type Vertex = (string,int,int,HashSet[string],seq[string])
 const Inf = high(int)
@@ -94,59 +90,3 @@ echo fmt"neighbours of start node: {getNeighbours(start)}"
 echo fmt"initial approximate optimum: {getApproximateOptimum(valves.keys.toSeq.toHashSet, 30)}"
 echo fmt"starting unturned: {valves.keys.toSeq.toHashSet}"
 echo bfs(start)
-
-# proc getIndex(v: Vertex): int = v[0] + v[1]*w
-# proc getVertex(index: int): Vertex = (index mod w, index div w)
-# 
-# let
-#   source = find('S')
-#   dest = find('E')
-# 
-# type PrioVert = (int, int)
-# proc `<`(a, b: PrioVert): bool = a[0] < b[0]
-# 
-# proc dijkstra(s: Vertex): seq[int] =
-#   var
-#     dist = newSeq[int](w*h)
-#     prev = newSeq[int](w*h)
-#     q = initHeapQueue[PrioVert]()
-#     sIndex = getIndex(s)
-# 
-#   dist[sIndex] = 0
-# 
-#   for v in 0..numVertices:
-#     if v != sIndex:
-#       dist[v] = Inf
-#       prev[v] = -1
-# 
-#     q.push((v, dist[v]))
-# 
-#   while q.len > 0:
-#     let
-#       (u,uDist) = q.pop
-#       (i,j) = getVertex(u)
-#       h1 = getHeight(g[j][i])
-# 
-#     for (i2,j2) in getNeighbours(u.getVertex):
-#       let h2 = getHeight(g[j2][i2])
-# 
-#       if h2 <= h1 + 1 and dist[u] < high(int):
-#         let
-#           alt = dist[u] + 1
-#           v = getIndex((i2,j2))
-#         if alt < dist[v]:
-#           dist[v] = alt
-#           prev[v] = u
-#           q.push((v, alt))
-# 
-#   dist
-# 
-# var dists = newSeq[int]()
-# 
-# for j in 0..h-1:
-#   for i in 0..w-1:
-#     if g[j][i] == 'a' or g[j][i] == 'S':
-#       let d = dijkstra((i,j))
-#       dists.add(d[getIndex(dest)])
-# 
-# echo fmt"dists: {min(dists)}"
