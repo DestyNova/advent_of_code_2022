@@ -6,7 +6,7 @@ const Inf = high(int)
 
 var valveNames: Table[string, (int, seq[string], int8)]
 var valves: Table[int8, (int, seq[int8])]
-var useless: set[int8]
+var useless: int
 
 proc encodeValves(keys: seq[int8]): int =
   var x = 0
@@ -31,8 +31,8 @@ proc getNeighbours(v: Vertex): seq[Vertex] =
 
   var vs = newSeq[Vertex]()
 
-  # we both turn a valve, but it must be two different valves
-  if unturned.holds(myV) and unturned.holds(elephantV) and myV != elephantV and (valves[myV][0] > 0 or valves[elephantV][0] > 0):
+  # we both turn a valve, but it must be two different valves, and neither can be useless...
+  if unturned.holds(myV) and unturned.holds(elephantV) and myV != elephantV and (valves[myV][0] > 0 and valves[elephantV][0] > 0):
     vs.add((myV, elephantV, m*flowRate1 + m*flowRate2 + released, m, unturned.without(@[myV, elephantV])))
 
   # otherwise, at least one of us moves
@@ -42,7 +42,7 @@ proc getNeighbours(v: Vertex): seq[Vertex] =
     if unturned.holds(elephantV) and valves[elephantV][0] > 0:
       vs.add((n, elephantV, m*flowRate2 + released, m, unturned.without(@[elephantV])))
     # or we both move to another valve, but only if there's enough time
-    if m > 1:
+    elif m > 1:
       for n2 in ns2:
         # vs.add((n, n2, released, m, unturned, moves & @[fmt"> {n}, > {n2}"]))
         vs.add((n, n2, released, m, unturned))
@@ -76,16 +76,9 @@ proc getApproximateOptimum(unturned: int, mins: int): int =
 proc `<`(a, b: Vertex): bool =
   # a[2] >= b[2]
   let
-    aPossible = 2*a[2] + 1*getApproximateOptimum(a[4], a[3])
-    bPossible = 2*b[2] + 1*getApproximateOptimum(b[4], b[3])
-  aPossible > bPossible
-
-proc notUseless(unturned: int): bool =
-  var closedValves: set[int8]
-  for k in 0..63:
-    if unturned.holds(int8(k)):
-      closedValves.incl(int8(k))
-  return closedValves != useless
+    aPossible = 1*a[2] + 1*getApproximateOptimum(a[4], a[3])
+    bPossible = 1*b[2] + 1*getApproximateOptimum(b[4], b[3])
+  aPossible >= bPossible
 
 # highest result so far... 2082... 2297, 2543, 2615
 proc bfs(start: Vertex): (int, seq[string]) =
@@ -93,6 +86,7 @@ proc bfs(start: Vertex): (int, seq[string]) =
     maxReleased = -Inf
     bestMoves: seq[string] = @[]
     q = initHeapQueue[Vertex]()
+    visited = initHashSet[Vertex]()
     step = 0
 
   q.push(start)
@@ -100,7 +94,7 @@ proc bfs(start: Vertex): (int, seq[string]) =
   while q.len > 0:
     if step mod 100000 == 0:
       let n = q.len
-      echo fmt"Step {step}: queue size: {n}, maxReleased: {maxReleased}"
+      echo fmt"Step {step}: queue size: {n}, maxReleased: {maxReleased}, visited len: {visited.len}"
     inc step
     let
       v = q.pop
@@ -112,7 +106,7 @@ proc bfs(start: Vertex): (int, seq[string]) =
       # bestMoves = moves
       echo fmt"new best v: {v}, maxReleased: {maxReleased}, bestPossible: {bestPossible}"
 
-    if bestPossible > maxReleased and notUseless(unturned):
+    if bestPossible > maxReleased and useless != unturned:
       for u in getNeighbours(v):
         let
           # (_, _, uReleased, _, _, uMoves) = u
@@ -122,7 +116,9 @@ proc bfs(start: Vertex): (int, seq[string]) =
           maxReleased = uReleased
           # bestMoves = uMoves
           echo fmt"new best neighbour u: {u}, maxReleased: {maxReleased}, bestPossible estimate was: {bestPossible}"
-        q.push(u)
+        if u notin visited:
+          q.push(u)
+          visited.incl(u)
 
   (maxReleased, bestMoves)
 
@@ -139,8 +135,8 @@ for line in stdin.lines:
   echo fmt"valve: {valve}, flowRate: {flowRate}, destinations: {destinations}"
 
   valveNames[valve] = (flowRate, destinations.split(", "), i)
-  if flowRate == 0:
-    useless.incl(i)
+  # add to useless set
+  if flowRate == 0: useless = useless or (1 shl i)
   i += 1
 
 for k,v in valveNames:
