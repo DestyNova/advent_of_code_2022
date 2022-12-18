@@ -21,23 +21,26 @@ proc getNeighbours(v: Vertex): seq[(Vertex,string)] =
     (flowRate, ns) = valves[valve]
     m = mins - 1
 
-  var vs = newSeq[(Vertex,string)]()
-
-  if m <= 1:
-    if p1:
-      let
-        startValve = valveNames["AA"][2]
-        p2Start: Vertex = (false,startValve,released,int8(26),unturned)
-      vs.add((p2Start, "p1 turn end"))
-    return vs
+  var
+    vs = newSeq[(Vertex,string)]()
+    noActions = true
 
   # turn a valve
-  if unturned.holds(valve) and flowRate > 0:
+  if m >= 2 and unturned.holds(valve) and flowRate > 0:
     vs.add(((p1, valve, m*flowRate + released, m, unturned.without(valve)), fmt"T {valve}"))
+    noActions = false
   # move
-  if m > 1:
+  if m >= 3:
     for n in ns:
       vs.add(((p1, n, released, m, unturned), fmt"> {n}"))
+    noActions = false
+
+  if noActions and p1:
+    let
+      startValve = valveNames["AA"][2]
+      p2Start: Vertex = (false,startValve,released,int8(26),unturned)
+    vs.add((p2Start, "p1 turn end"))
+
   return vs
 
 proc getApproximateOptimum(p1: bool, unturned: int, mins: int): int =
