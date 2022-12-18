@@ -44,7 +44,7 @@ See it yet? :)
 
 A fun puzzle. I made quite a few really sloppy mistakes in part 2. My brain was already overloaded just mentally doing the cube rotations to map movement relative to the left face onto movement relative to another face. At some point I was holding two Rubik's cubes next to each other and saying things to myself like "ok so if THIS corner is (1,1,1) and we're flowing from the back face, but THAT cube is in the way, we should explore its left face... but how is it reaching this face from here? That should be impossible... oh wait... no..."
 
-I'm still not happy with the implementation of the `getVertices` function -- I tried basing it on cube rotations, but it messed everything up since there's an offset that needs to be added. Actually... maybe that's it.
+I'm still not happy with the implementation of the `getVertices` function -- I tried basing it on cube rotations, but it messed everything up since there's an offset that needs to be added. But for this type of mapping, I think two rotations are needed, and the way I implemented `rotate` and `translate` unfortunately doesn't allow for easy composition. If you can think of a nice way to refactor this, let me know!
 
 ## Benchmarks
 
