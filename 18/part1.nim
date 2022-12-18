@@ -8,8 +8,6 @@ echo cubes
 let allSides = cubes.len * 6
 echo fmt"allSides: {allSides}"
 
-# count intersecting faces
-# explode each plane
 type Coord = (int,int,int)
 var
   faces: HashSet[HashSet[Coord]]
@@ -40,15 +38,6 @@ for cube in cubes:
   faces.incl(left)  # left
   faces.incl(right)  # right
   faces.incl(bottom)  # bottom
-  # echo fmt"faces after {cube}: {faces}"
-
-  allFaces.add(top)  # top
-  allFaces.add(front)  # front
-  allFaces.add(back)  # back
-  allFaces.add(left)  # left
-  allFaces.add(right)  # right
-  allFaces.add(bottom)  # bottom
 
 echo faces.len
-echo allFaces.len
 echo faces.len - dupes

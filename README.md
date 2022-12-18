@@ -52,7 +52,7 @@ SUM:                            99            841            197          29858
 * Day 15: [Beacon Exclusion Zone](https://github.com/DestyNova/advent_of_code_2022/blob/main/15)
 * Day 16: [Proboscidea Volcanium](https://github.com/DestyNova/advent_of_code_2022/blob/main/16)
 * Day 17: [Pyroclastic Flow](https://github.com/DestyNova/advent_of_code_2022/blob/main/17)
-* Day 18: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/18)
+* Day 18: [Boiling Boulders](https://github.com/DestyNova/advent_of_code_2022/blob/main/18)
 * Day 19: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/19)
 * Day 20: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/20)
 * Day 21: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/21)
