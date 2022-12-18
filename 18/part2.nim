@@ -136,7 +136,7 @@ proc floodSide(x: int, y: int, z: int, s: Side): HashSet[Face] =
   if f(-1,0,+1) in cubes:
     # back to Front of cube x-1 z+1
     reachable.incl((f(-1,0,+1), r(Front)))
-  elif (0,0,+1) in cubes:
+  elif f(0,0,+1) in cubes:
     # back to Left of cube z+1
     reachable.incl((f(0,0,+1), r(Left)))
   else:
