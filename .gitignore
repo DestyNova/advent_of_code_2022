@@ -1,5 +1,3 @@
-part*_crystal
-part*_nim
-part*_vale
-part*_ante
+part*
+!part*.*
 target
