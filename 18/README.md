@@ -43,3 +43,23 @@ See it yet? :)
 ## Thoughts
 
 A fun puzzle. I made quite a few really sloppy mistakes in part 2. My brain was already overloaded just mentally doing the cube rotations to map movement relative to the left face onto movement relative to another face. At some point I was holding two Rubik's cubes next to each other and saying things to myself like "ok so if THIS corner is (1,1,1) and we're flowing from the back face, but THAT cube is in the way, we should explore its left face... but how is it reaching this face from here? That should be impossible... oh wait... no..."
+
+I'm still not happy with the implementation of the `getVertices` function -- I tried basing it on cube rotations, but it messed everything up since there's an offset that needs to be added. Actually... maybe that's it.
+
+## Benchmarks
+
+### Time (`-d:release --gc:orc`)
+
+```
+Benchmark 1: ./part2 < input
+  Time (mean ± σ):      61.3 ms ±   4.3 ms    [User: 59.2 ms, System: 2.2 ms]
+  Range (min … max):    56.9 ms …  69.8 ms    51 runs
+```
+
+![Boxplot of runtime benchmark results](runtime.png)
+
+### Summary
+
+Program             | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | Source gzipped
+---                 | ---              | ---               | ---          | ---          | ---
+part2_nim           | ~1.4             | 61.3              | 3728         | 4813         | 1301
