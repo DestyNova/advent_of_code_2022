@@ -16,30 +16,32 @@ proc encodeValves(keys: seq[int8]): int =
 proc holds(x: int, key: int8): bool = (x and (1 shl key)) != 0
 proc without(x: int, key: int8): int = x xor (1 shl key)
 
-proc getNeighbours(v: Vertex): seq[(Vertex,string)] =
+proc getNeighbours(v: Vertex): seq[Vertex] =
   let
     (p1, valve, released, mins, unturned) = v
     (flowRate, ns) = valves[valve]
     m = mins - 1
 
-  var vs = newSeq[(Vertex,string)]()
-
-  # if terminal state for p1, continue with elephant from 26 mins, but carrying over other state
-  if m < 1:
-    if p1:
-      let
-        startValve = valveNames["AA"][2]
-        p2Start: Vertex = (false,startValve,released,int8(26),unturned)
-      vs.add((p2Start, "P1 turn end"))
-      # echo fmt"P1 terminal state, vs: {vs}"
-    return vs
+  var
+    vs = newSeq[Vertex]()
+    noActions = true
 
   # turn a valve
-  if unturned.holds(valve) and flowRate > 0:
-    vs.add(((p1, valve, m*flowRate + released, m, unturned.without(valve)), fmt"T {valve}"))
+  if m >= 2 and unturned.holds(valve) and flowRate > 0:
+    vs.add((p1, valve, m*flowRate + released, m, unturned.without(valve)))
+    noActions = false
   # move
-  else:
-    for n in ns: vs.add(((p1, n, released, m, unturned), fmt"> {n}"))
+  if m >= 3:
+    for n in ns:
+      vs.add((p1, n, released, m, unturned))
+    noActions = false
+
+  if noActions and p1:
+    let
+      startValve = valveNames["AA"][2]
+      p2Start: Vertex = (false,startValve,released,int8(26),unturned)
+    vs.add(p2Start)
+
   return vs
 
 proc getApproximateOptimum(p1: bool, unturned: int, mins: int): int =
@@ -69,7 +71,6 @@ proc getApproximateOptimum(p1: bool, unturned: int, mins: int): int =
 
 # greedy approximation...
 proc `<`(a, b: Vertex): bool =
-  # a[2] >= b[2]
   let
     (aP1, _, aReleased, aMins, aUnturned) = a
     (bP1, _, bReleased, bMins, bUnturned) = b
@@ -78,10 +79,9 @@ proc `<`(a, b: Vertex): bool =
   aPossible > bPossible
 
 # highest result so far... 2082... 2297, 2543, 2615
-proc bfs(start: Vertex): (int, seq[string]) =
+proc bfs(start: Vertex): int =
   var
     maxReleased = -Inf
-    bestMoves: seq[string] = @[]
     visited = initHashSet[Vertex]()
     q = initHeapQueue[Vertex]()
     step = 0
@@ -96,30 +96,27 @@ proc bfs(start: Vertex): (int, seq[string]) =
     inc step
     let
       v = q.pop
-      (p1, valve, released, mins, unturned) = v
+      (p1, _, released, mins, unturned) = v
       bestPossible = released + getApproximateOptimum(p1, unturned, mins)
 
     if released > maxReleased:
       maxReleased = released
-      # bestMoves = moves
       echo fmt"new best v: {v}, maxReleased: {maxReleased}, bestPossible: {bestPossible}"
 
     if bestPossible > maxReleased and useless != unturned:
       for u in getNeighbours(v):
         let
-          # (_, _, uReleased, _, _, uMoves) = u
-          (state, uMoves) = u
+          state = u
           (_, _, uReleased, _, _) = state
         # echo fmt"u: {u}"
         if uReleased > maxReleased:
           maxReleased = uReleased
-          # bestMoves = uMoves
           echo fmt"new best neighbour u: {u}, maxReleased: {maxReleased}, bestPossible estimate was: {bestPossible}"
         if state notin visited:
           q.push(state)
           visited.incl(state)
 
-  (maxReleased, bestMoves)
+  maxReleased
 
 var i: int8 = 0
 for line in stdin.lines:
