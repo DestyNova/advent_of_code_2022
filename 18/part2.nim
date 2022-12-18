@@ -1,4 +1,4 @@
-import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue, tables, sugar, math]
+import std/[sequtils, sets, strformat, strutils, sugar]
 
 type Coord = (int,int,int)
 type Side = enum Left, Right, Top, Bottom, Front, Back
@@ -10,14 +10,11 @@ let cubes = stdin.lines.toSeq.map(proc(c: string): Coord =
   return (cs[0], cs[1], cs[2])
 )
 
-let cubeset = cubes.toHashSet
-
-echo cubes
-
 # upper bound: all sides of all cubes
 let allSides = cubes.len * 6
 echo fmt"allSides: {allSides}"
 
+# generate function to rotate coordinates relative to left side
 proc translator(x,y,z:int, s: Side): (int,int,int) -> Coord =
   case s:
     of Left:
@@ -87,8 +84,11 @@ proc rotator(s: Side): Side -> Side =
 
 proc flip(s: Side): Side =
   case s:
-    of Front: Back
-    of Back: Front
+    of Front: Left
+    of Back: Right
+    of Left: Back
+    of Right: Front
+    of Top: Left
     else: s
 
 proc getVertices(face: Face): HashSet[Coord] =
@@ -155,10 +155,6 @@ proc floodSide(x: int, y: int, z: int, s: Side): HashSet[Face] =
     reachable.incl((c, r(Front)))
   return reachable
 
-# echo fmt"translator: {translator(1,2,2,Bottom)(0,1,0)}"
-# echo fmt"flood fill test: {floodSide(1,2,2,Left)}"
-# echo fmt"flood fill test from bottom: {floodSide(1,2,2,Bottom)}"
-
 # flood fill from an edge cube
 var
   visited: HashSet[HashSet[Coord]]
@@ -170,35 +166,20 @@ let startCube = min(cubes)
 q.add((startCube, Left))
 echo fmt"min cube: {min(cubes)}"
 
-# echo fmt"bottom of (1,1,1): {getVertices(((1,1,1),Bottom))}"
-# echo fmt"bottom of (1,2,2): {getVertices(((1,2,2),Bottom))}"
 while q.len > 0:
   let
     face = q.pop
     vertices = getVertices(face)
 
-  if vertices in visited:
-    continue # skip it, already seen
+  if vertices in visited: continue
   visited.incl(vertices)
 
-  # echo fmt"walking face: {face}"
   count += 1
   let
     (c, side) = face
     (x,y,z) = c
-  echo fmt"{x} {y} {z}, {side}"
-  if c notin cubes:
-    raise newException(ValueError, "WAT NO CUBE?")
 
   # z+1 => away from us, z-1 => toward us, y+1 = up
-  let reachable: HashSet[Face] = floodSide(x,y,z,side)
-
-  # echo fmt"Reachable from {c}, {side}: {reachable}"
-  # 3,2,5 Back exists, therefore 3,2,5 exists...
-  if getVertices(((2,2,5), Left)) in reachable.map(getVertices):
-    echo fmt"what is this: {getVertices(((2,2,5), Left))}"
-    raise newException(ValueError, "WAT")
-  for f in reachable:
-    q.add(f)
+  for f in floodSide(x,y,z,side): q.add(f)
 
 echo fmt"Total faces walked: {count}"
