@@ -1,0 +1,94 @@
+import sat.
+import util.
+
+main =>
+  % Lines = read_file_lines(),
+  % Input = map(parse_line, Lines),
+  Blueprint=[4,2, 3,14, 2,7],
+  println(Blueprint),
+  calc(Blueprint).
+
+calc(Blueprint) =>
+  N = 25,
+  Actions = new_array(N),
+  Actions :: 0..5, % really 4, just testing something
+  Actions[1] #= 0,
+  Ore = new_array(N),
+  Ore :: 0..1000,
+  Ore[1] #= 0,
+  Clay = new_array(N),
+  Clay :: 0..1000,
+  Clay[1] #= 0,
+  Obsidian = new_array(N),
+  Obsidian :: 0..1000,
+  Obsidian[1] #= 0,
+  Geode = new_array(N),
+  Geode :: 0..1000,
+  Geode[1] #= 0,
+
+  OreR = new_array(N),
+  OreR :: 0..1000,
+  OreR[1] #= 1,
+  ClayR = new_array(N),
+  ClayR :: 0..1000,
+  ClayR[1] #= 0,
+  ObsidianR = new_array(N),
+  ObsidianR :: 0..1000,
+  ObsidianR[1] #= 0,
+  GeodeR = new_array(N),
+  GeodeR :: 0..1000,
+  GeodeR[1] #= 0,
+
+  foreach(I in 2..N)
+    % actions: 0 = wait, 1 = ore robot, 2 = clay robot, 3 = obsidian robot, 4 = geode robot
+    % restrict actions requiring ore
+    println(i=I),
+    Actions[I] #!= cond(Ore[I] #< Blueprint[1], 1, 5),
+    Actions[I] #!= cond(Ore[I] #< Blueprint[2], 2, 5),
+    Actions[I] #!= cond(Ore[I] #< Blueprint[3], 3, 5),
+    Actions[I] #!= cond(Ore[I] #< Blueprint[5], 4, 5),
+    % restrict actions requiring clay
+    Actions[I] #!= cond(Clay[I] #< Blueprint[4], 3, 5),
+    % restrict actions requiring obsidian
+    Actions[I] #!= cond(Obsidian[I] #< Blueprint[6], 4, 5),
+    % do something
+    Actions[I] #< cond(Ore[I] #>= Blueprint[1], 0, 5),
+
+    % update ores
+    Ore[I] #= Ore[I-1] + OreR[I-1] - cond(Actions[I] #= 1,
+      Blueprint[1],
+      cond(Actions[I] #= 3,
+        Blueprint[3],
+        cond(Actions[I] #= 4, Blueprint[5], 0))),
+    % Clay[I] #= Clay[I-1] + ClayR[I-1] - cond(Actions[I] #= 2, Blueprint[2], cond(Actions[I] #= 3, Blueprint[4], 0)),
+    % Obsidian[I] #= Obsidian[I-1] + ObsidianR[I-1] - cond(Actions[I] #= 3, Blueprint[3], cond(Actions[I] #= 4, Blueprint[6], 0)),
+    Geode[I] #= Geode[I-1] + GeodeR[I-1] - cond(Actions[I] #= 1, Blueprint[6], 0),
+
+    % update robots
+    OreR[I] #= OreR[I-1] + cond(Actions[I] #= 1, 1, 0),
+    % ClayR[I] #= ClayR[I-1] + cond(Actions[I] #= 2, 1, 0),
+    % ObsidianR[I] #= ObsidianR[I-1] + cond(Actions[I] #= 3, 1, 0),
+    % GeodeR[I] #= GeodeR[I-1] + cond(Actions[I] #= 4, 1, 0),
+  end,
+
+  println(101),
+  println(ore7=Ore[7]),
+  println(blueprint1=Blueprint[1]),
+  Actions[7] #= 1,
+  println(102),
+
+  TotalScore #= Geode[25],
+  println(actions1=Actions),
+  solve([$max(TotalScore)], Actions),
+  println(totalScore=TotalScore),
+  println(actions2=Actions),
+  println(ore=Ore),
+  println(ore7=Ore[7]),
+  println(blueprint1=Blueprint[1]),
+  println(oreR=OreR),
+  println(geodes=Geode),
+  println(geodeR=GeodeR).
+
+parse_line(S) = R =>
+  [_,_,Capacity,_,Durability,_,Flavour,_,Texture,_,Calories|_] = split(delete_all(S, ',')),
+  R = map(parse_term, [Capacity,Durability,Flavour,Texture,Calories]).
