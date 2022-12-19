@@ -1,67 +1,63 @@
-import sat.
+import mip.
 import util.
 
 main =>
   Lines = read_file_lines(),
-  Blueprints = map(parse_line, Lines),
+  Blueprints = take(map(parse_line, Lines), 3),
 
-  TotalQuality = 0,
+  Res = 1,
   println(Blueprints),
   foreach(I in 1..length(Blueprints))
     Blueprint = Blueprints[I],
     println(Blueprint),
     Geodes = calc(Blueprint),
     println(Geodes),
-    TotalQuality := TotalQuality + I * Geodes,
+    Res := Res * Geodes
   end,
-  println(totalQuality=TotalQuality).
+  println(res=Res).
 
 calc(Blueprint) = R =>
-  N = 25,
+  N = 33,
   Actions = new_array(N),
-  Actions :: 0..4, % really 4, just testing something
-  Actions[1] #= 0,
+  Actions :: 0..4,
+  Actions[1] #= 0,  % fake action for time 1: a dummy timestep so we can more easily derive values for the next step
   Ore = new_array(N),
-  Ore :: 0..1000,
+  Ore :: 0..255,
   Ore[1] #= 0,
   Clay = new_array(N),
-  Clay :: 0..1000,
+  Clay :: 0..255,
   Clay[1] #= 0,
   Obsidian = new_array(N),
-  Obsidian :: 0..1000,
+  Obsidian :: 0..255,
   Obsidian[1] #= 0,
   Geode = new_array(N),
-  Geode :: 0..1000,
+  Geode :: 0..255,
   Geode[1] #= 0,
 
   OreR = new_array(N),
-  OreR :: 0..1000,
+  OreR :: 0..255,
   OreR[1] #= 1,
   ClayR = new_array(N),
-  ClayR :: 0..1000,
+  ClayR :: 0..255,
   ClayR[1] #= 0,
   ObsidianR = new_array(N),
-  ObsidianR :: 0..1000,
+  ObsidianR :: 0..255,
   ObsidianR[1] #= 0,
   GeodeR = new_array(N),
-  GeodeR :: 0..1000,
+  GeodeR :: 0..255,
   GeodeR[1] #= 0,
 
   foreach(I in 2..N)
     % actions: 0 = wait, 1 = ore robot, 2 = clay robot, 3 = obsidian robot, 4 = geode robot
     Action #= Actions[I],
 
-    % restrict actions requiring ore
+    % restrict actions requiring various ores
     Ore[I-1] #< Blueprint[1] #=> Action #!= 1,
     Ore[I-1] #< Blueprint[2] #=> Action #!= 2,
     Ore[I-1] #< Blueprint[3] #=> Action #!= 3,
-    Ore[I-1] #< Blueprint[5] #=> Action #!= 4,
-    % restrict actions requiring clay
     Clay[I-1] #< Blueprint[4] #=> Action #!= 3,
-    % restrict actions requiring obsidian
+    Ore[I-1] #< Blueprint[5] #=> Action #!= 4,
     Obsidian[I-1] #< Blueprint[6] #=> Action #!= 4,
-    % do something
-    (Ore[I-1] #>= Blueprint[1]) #/\ (Clay[I-1] #>= Blueprint[2]) #/\ (Obsidian[I-1] #>= Blueprint[6]) #=> Action #!= 0,
 
     % update ores
     Action #= 0 #=> OreCost #= 0,
@@ -88,18 +84,12 @@ calc(Blueprint) = R =>
     GeodeR[I] #= GeodeR[I-1] + cond(Action #= 4, 1, 0),
   end,
 
-  TotalScore #= Geode[25],
-  println(actions1=Actions),
-  solve([$max(TotalScore)], Actions),
-  println(totalScore=TotalScore),
+  TotalScore #= Geode[Geode.length()],
+  solve([inout, split, $max(TotalScore)], Actions),
   println(actions2=Actions),
-  println(ore=Ore),
-  println(oreR=OreR),
-  println(geodes=Geode),
-  println(geodeR=GeodeR),
   R = TotalScore.
 
 parse_line(S) = R =>
   Xs = split(S),
-  %println(zip(1..100,Xs)),
+  % ugly parse. costs per robot/material: ore/ore, clay/ore, obsidian/ore, obsidian/clay, geode/ore, geode/obsidian
   R = map(parse_term, [Xs[7],Xs[13],Xs[19],Xs[22],Xs[28],Xs[31]]).
