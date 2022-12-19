@@ -13,11 +13,11 @@ I took the gamble that maybe Picat's constraint solvers would work on this probl
 
 Anyway, it took another hour or so to encode the problem in Picat's domain constraint expressions. Along the way, I made the basic error of defining this timestep's ore values in terms of itself, rather than relative to the previous timestep's value. This results in error messages that are quite... terse. Like `error: failed/main`. So it takes some expertise to track down mistakes. I also learned how to make use of the implication constraint `X #=> Y`, which allowed me to get rid of some unwieldy and probably erroneous nested `cond` expressions.
 
-Eventually when I got it running, I was astounded to discover that it produced the correct answer in about 22 seconds.
+Eventually when I got it running, I was astounded to discover that it produced the correct answer in about 22 seconds. A bit of optimisation brought it down to 12 seconds -- this consisted of the usual trick for Picat: define a range for every domain variable and try to reduce them their narrowest.
 
 ## Part 2
 
-This is where the magic of Picat comes in: a tiny modification to the source code produced a program that outputs the correct result in about 9 seconds. My split time was about 5 minutes. I'm amazed at how easily Picat can take on problems like this, without having to specify how to search or provide heuristic guidance (which I tried in my Nim implementation, but obviously got something wrong).
+This is where the magic of Picat comes in: a tiny modification to the source code produced a program that outputs the correct result in about 9 seconds. My split time was about 5 minutes. Applying the same optimisations as in part 1 brought it down to about 6 seconds. I'm amazed at how easily Picat can take on problems like this, without having to specify how to search or provide heuristic guidance (which I tried in my Nim implementation, but obviously got something wrong).
 
 Interestingly, for part 2 I didn't have much luck with Picat's `cp` solver, but relied on `sat` instead. There doesn't seem to be an easy way to tell ahead of time which solver should be used, but generally I'll start with cp, then sat, then mip, then smt (which has never really worked well for me in the past).
 

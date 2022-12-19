@@ -1,4 +1,4 @@
-import mip.
+import sat.
 import util.
 
 main =>
@@ -60,6 +60,7 @@ calc(Blueprint) = R =>
     Obsidian[I-1] #< Blueprint[6] #=> Action #!= 4,
 
     % update ores
+    [OreCost, ClayCost, ObsidianCost] :: 0..100,
     Action #= 0 #=> OreCost #= 0,
     Action #= 1 #=> OreCost #= Blueprint[1],
     Action #= 2 #=> OreCost #= Blueprint[2],
