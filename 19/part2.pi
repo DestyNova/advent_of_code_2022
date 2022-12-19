@@ -17,34 +17,32 @@ main =>
   println(res=Res).
 
 calc(Blueprint) = R =>
+  % add one dummy timestep so there's always a valid previous state
   N = 33,
   Actions = new_array(N),
   Actions :: 0..4,
-  Actions[1] #= 0,  % fake action for time 1: a dummy timestep so we can more easily derive values for the next step
+  Actions[1] #= 0,
+
+  % Ores
   Ore = new_array(N),
-  Ore :: 0..255,
-  Ore[1] #= 0,
   Clay = new_array(N),
-  Clay :: 0..255,
-  Clay[1] #= 0,
   Obsidian = new_array(N),
-  Obsidian :: 0..255,
-  Obsidian[1] #= 0,
   Geode = new_array(N),
-  Geode :: 0..255,
+  [Ore, Clay, Obsidian, Geode] :: 0..255,
+  Ore[1] #= 0,
+  Clay[1] #= 0,
+  Obsidian[1] #= 0,
   Geode[1] #= 0,
 
+  % Robots
   OreR = new_array(N),
-  OreR :: 0..255,
-  OreR[1] #= 1,
   ClayR = new_array(N),
-  ClayR :: 0..255,
-  ClayR[1] #= 0,
   ObsidianR = new_array(N),
-  ObsidianR :: 0..255,
-  ObsidianR[1] #= 0,
   GeodeR = new_array(N),
-  GeodeR :: 0..255,
+  [OreR, ClayR, ObsidianR, GeodeR] :: 0..N,
+  OreR[1] #= 1,
+  ClayR[1] #= 0,
+  ObsidianR[1] #= 0,
   GeodeR[1] #= 0,
 
   foreach(I in 2..N)

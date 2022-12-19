@@ -1,4 +1,4 @@
-import cp.
+import sat.
 import util.
 
 main =>
@@ -21,30 +21,27 @@ calc(Blueprint) = R =>
   Actions = new_array(N),
   Actions :: 0..4,
   Actions[1] #= 0,
+
+  % Ores
   Ore = new_array(N),
-  Ore :: 0..255,
-  Ore[1] #= 0,
   Clay = new_array(N),
-  Clay :: 0..255,
-  Clay[1] #= 0,
   Obsidian = new_array(N),
-  Obsidian :: 0..255,
-  Obsidian[1] #= 0,
   Geode = new_array(N),
-  Geode :: 0..255,
+  [Ore, Clay, Obsidian, Geode] :: 0..255,
+  Ore[1] #= 0,
+  Clay[1] #= 0,
+  Obsidian[1] #= 0,
   Geode[1] #= 0,
 
+  % Robots
   OreR = new_array(N),
-  OreR :: 0..255,
-  OreR[1] #= 1,
   ClayR = new_array(N),
-  ClayR :: 0..255,
-  ClayR[1] #= 0,
   ObsidianR = new_array(N),
-  ObsidianR :: 0..255,
-  ObsidianR[1] #= 0,
   GeodeR = new_array(N),
-  GeodeR :: 0..255,
+  [OreR, ClayR, ObsidianR, GeodeR] :: 0..N,
+  OreR[1] #= 1,
+  ClayR[1] #= 0,
+  ObsidianR[1] #= 0,
   GeodeR[1] #= 0,
 
   foreach(I in 2..N)
@@ -60,11 +57,9 @@ calc(Blueprint) = R =>
     Clay[I-1] #< Blueprint[4] #=> Action #!= 3,
     % restrict actions requiring obsidian
     Obsidian[I-1] #< Blueprint[6] #=> Action #!= 4,
-    % do something
-    (Ore[I-1] #>= Blueprint[1]) #/\ (Clay[I-1] #>= Blueprint[2]) #/\ (Obsidian[I-1] #>= Blueprint[6]) #=> Action #!= 0,
 
     % update ores
-    [OreCost, ClayCost, ObsidianCost] :: 0..100,
+    [OreCost, ClayCost, ObsidianCost] :: 0..40,
     Action #= 0 #=> OreCost #= 0,
     Action #= 1 #=> OreCost #= Blueprint[1],
     Action #= 2 #=> OreCost #= Blueprint[2],
@@ -101,5 +96,4 @@ calc(Blueprint) = R =>
 
 parse_line(S) = R =>
   Xs = split(S),
-  %println(zip(1..100,Xs)),
   R = map(parse_term, [Xs[7],Xs[13],Xs[19],Xs[22],Xs[28],Xs[31]]).
