@@ -1,0 +1,127 @@
+import cp.
+import util.
+
+main =>
+  Lines = read_file_lines(),
+  Input = map(parse_line, Lines),
+
+  ValveIndices = new_map(),
+  foreach(I in 1..length(Input))
+    L = Input[I],
+    ValveIndices.put(L[1], I)
+  end,
+
+  Valves = new_map(),
+  foreach([V,Rate,Vs] in Input)
+    Valves.put(ValveIndices.get(V), {Rate, [ValveIndices.get(Destination) : Destination in Vs]}),
+  end,
+  println(m=Valves),
+  Res = calc(Valves, ValveIndices.get("AA")),
+  println("wat").
+
+calc(Valves, Start) = R =>
+  Mins = 26,
+  % do player moves, then elephant moves
+  Steps = Mins*2,
+  N = Valves.size,
+  println(n=N),
+  println(valves=Valves),
+
+  Actions = new_array(Steps),
+  Actions :: 0..N,
+
+  % adjacency matrix + flow rates
+  Adj = new_array(N,N),
+  foreach(Source in 1..N)
+    {Rate, Destinations} = Valves.get(Source),
+    foreach(Dest in 1..N)
+      Adj[Source,Dest] = cond(member(Dest, Destinations), 1, 0),
+    end,
+  end,
+
+  println(adj1=Adj),
+  Adjacent = new_array(N,N),
+  Adjacent :: 0..1,
+  Rates = new_array(N),
+  foreach(Source in 1..N)
+    {Rate, Destinations} = Valves.get(Source),
+    Rates[Source] #= Rate,
+    println(dest=Destinations),
+    foreach(Dest in 1..N)
+      % really not sure why I have to make a separate "real" array, then copy elements with matrix_element
+      X #= Adj[Source,Dest],
+      matrix_element(Adjacent,J,I,X),
+    end,
+  end,
+
+  println(adj=Adjacent),
+
+  % State
+  OpenValves = new_array(Steps+1,N),
+  % 0 = closed, 1 = opened already
+  OpenValves :: 0..1,
+  foreach(I in 1..N)
+    OpenValves[1,I] #= 0,
+  end,
+
+  PressureReleased = new_array(Steps+1),
+  PressureReleased :: 0..10000,
+  PressureReleased[1] #= 0,
+
+  PlayerLocation = new_array(Steps+1),
+  PlayerLocation :: 1..N,
+  PlayerLocation[1] #= Start,
+  PlayerLocation[Mins + 1] #= Start,  % elephant starts from valve AA again
+
+  foreach(P in 0..1)
+    foreach(T in 1..Mins)
+      I = P*Mins + T,
+      M #= Mins + 1 - T,
+      % Actions: 0 = turn valve, 1..N = go to valve number N
+      Action #= Actions[I],
+      Location #= PlayerLocation[I],
+      NextLocation #= cond(Action #= 0, 1, Action),
+
+      % restrict valve opening
+      matrix_element(OpenValves, I, Location, IsOpened),
+      % IsOpened #= 0 #<=> Action #= 0,      % can't open already-open valve
+      Action #= 0 #=> IsOpened #= 0,      % can't open already-open valve
+      Action #= 0 #=> WillOpen #= 1,
+      % update valve state
+      matrix_element(OpenValves, I+1, Location, WillOpen),
+
+      element(Location, Rates, Rate),
+      % Rate #= 0 #=> Action #!= 0,             % don't open a useless valve (maybe drop this?)
+      Mins #< 2 #=> Action #!= 0,                        % opening valve with 1 min left is meaningless
+
+      % movement
+      matrix_element(Adjacent, Location, NextLocation, X),
+      Action #> 0 #=> X #= 1,    %  can only move to adjacent position
+
+      % update player location if needed
+      PlayerLocation[I+1] #= cond(Action #> 0 #/\ M #> 1, NextLocation, Location),
+
+      % update pressure released
+      Action #= 0 #=> PressureReleased[I+1] #= PressureReleased[I] + Rate*(M-1),
+      Action #> 0 #=> PressureReleased[I+1] #= PressureReleased[I],
+    end,
+  end,
+
+  println("ready"),
+  TotalScore #= PressureReleased[Steps+1],
+  solve([ff, split, $max(TotalScore)], Actions),
+  println(actions2=Actions),
+  println(pressure=PressureReleased),
+  println(location=PlayerLocation),
+  println(openValves=OpenValves),
+  println(totalScore=TotalScore),
+  R = TotalScore.
+
+parse_line(S) = R =>
+  Xs = split(S),
+  [_,V,_,_,RateS,_,_,_,_|Vs] = Xs,
+  Rate = split(RateS,"=").slice(2).head().split(";").head().to_int(),
+  Valves = [X.split(",").head() : X in Vs],
+  println(parsed=[V,Rate,Valves]),
+
+  R = [V,Rate,Valves].
