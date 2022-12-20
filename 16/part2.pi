@@ -130,8 +130,7 @@ calc(Valves, Start) = R =>
   R = TotalScore.
 
 parse_line(S) = R =>
-  Xs = split(S),
-  [_,V,_,_,RateS,_,_,_,_|Vs] = Xs,
+  [_,V,_,_,RateS,_,_,_,_|Vs] = split(S),
   Rate = split(RateS,"=").slice(2).head().split(";").head().to_int(),
   Valves = [X.split(",").head() : X in Vs],
   println(parsed=[V,Rate,Valves]),
