@@ -17,4 +17,4 @@ The extension to part 2 was very trivial this time -- part 1 was really the hard
 
 ## Thoughts
 
-Too early in the morning for thinking about modulo and wrapping around a queue...
+Too early in the morning for thinking about modulo and wrapping around a queue... But as is often the case, I should have started making a set of simple testcases sooner, since even "obvious" cases like `0 0 0 1` and `-2 0 0 0` revealed that I'd misunderstood the spec. Working through some examples with 4 numbers, it quickly became apparent that numbers will either stay in place or shift to one of 3 other positions, indicating that for N numbers, a modulo (N-1) step will be required.
