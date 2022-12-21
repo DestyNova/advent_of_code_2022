@@ -12,10 +12,10 @@ main =>
 
   println(calc(T.get("root"), T)).
 
-calc([X], T) = R => R = X.to_int.
-calc([A,"+",B], T) = R => R = calc(T.get(A),T) + calc(T.get(B), T).
-calc([A,"-",B], T) = R => R = calc(T.get(A),T) - calc(T.get(B), T).
-calc([A,"*",B], T) = R => R = calc(T.get(A),T) * calc(T.get(B), T).
-calc([A,"/",B], T) = R => R = calc(T.get(A),T) div calc(T.get(B), T).
+calc([X], T) = X.to_int.
+calc([A,"+",B], T) = calc(T.get(A),T) + calc(T.get(B), T).
+calc([A,"-",B], T) = calc(T.get(A),T) - calc(T.get(B), T).
+calc([A,"*",B], T) = calc(T.get(A),T) * calc(T.get(B), T).
+calc([A,"/",B], T) = calc(T.get(A),T) div calc(T.get(B), T).
 
 parse_line(S) = split(S,": ").
