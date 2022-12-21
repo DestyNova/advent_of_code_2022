@@ -1,0 +1,21 @@
+import sat.
+import util.
+
+main =>
+  Lines = read_file_lines(),
+  Monkeys = map(parse_line, Lines),
+
+  T = new_map(),
+  foreach(M in Monkeys)
+    T.put(M[1], M.drop(1))
+  end,
+
+  println(calc(T.get("root"), T)).
+
+calc([X], T) = R => R = X.to_int.
+calc([A,"+",B], T) = R => R = calc(T.get(A),T) + calc(T.get(B), T).
+calc([A,"-",B], T) = R => R = calc(T.get(A),T) - calc(T.get(B), T).
+calc([A,"*",B], T) = R => R = calc(T.get(A),T) * calc(T.get(B), T).
+calc([A,"/",B], T) = R => R = calc(T.get(A),T) div calc(T.get(B), T).
+
+parse_line(S) = split(S,": ").
