@@ -17,12 +17,13 @@ main =>
 crunch(T) =>
   Root = T.get("root"),
   % I'm using "P" to recursively tie together the expression tree.
-  P :: 0..100000000000000,
-  X :: 0..100000000000000,
   calc("root",Root,T,X,P),
   println(x1=X),
   println(p=P),
-  solve([split], [X,P]),
+  % cp somehow figures this one out even if we don't call "solve"???
+  % sat doesn't, and throws a "free_var_not_allowed" error if I don't manually provide the domain of X
+  % cp and mip return a correct answer incredibly fast (around 10 ms)
+  % solve([split], X),
   println(x2=X).
 
 calc("humn", _, T, X, P) =>
@@ -61,6 +62,7 @@ calc(Name, [A,"/",B], T, X, P) =>
   Bm = T.get(B),
   calc(A,Am,T,X,L),
   calc(B,Bm,T,X,R),
-  P #= L / R.
+  L mod R #= 0,  % this seems to be very important and allows cp to resolve everything without invoking the solver...
+  P #= L div R.
 
 parse_line(S) = split(S,": ").
