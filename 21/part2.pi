@@ -17,9 +17,8 @@ main =>
 crunch(T) =>
   Root = T.get("root"),
   % I'm using "P" to recursively tie together the expression tree.
-  calc("root",Root,T,X,P),
+  calc("root",Root,T,X,nop),
   println(x1=X),
-  println(p=P),
   % cp somehow figures this one out even if we don't call "solve"???
   % sat doesn't, and throws a "free_var_not_allowed" error if I don't manually provide the domain of X
   % cp and mip return a correct answer incredibly fast (around 10 ms)
@@ -32,12 +31,11 @@ calc("humn", _, T, X, P) =>
 calc(Name, [K], T, X, P) =>
   Ki = K.to_int(),
   P #= Ki.
-calc("root", [A,_,B], T, X, P) =>
+calc("root", [A,_,B], T, X, _) =>
   Am = T.get(A),
   Bm = T.get(B),
   calc(A,Am,T,X,P1),
   calc(B,Bm,T,X,P2),
-  P #= P2,
   P1 #= P2.
 calc(Name, [A,"+",B], T, X, P) =>
   Am = T.get(A),
