@@ -16,20 +16,21 @@ One thing I'm expecting to find more difficult in Nim/Crystal is complex input p
 ## Current code stats with [cloc](https://github.com/AlDanial/cloc)
 
 ```
-github.com/AlDanial/cloc v 1.90  T=0.09 s (1387.5 files/s, 384959.4 lines/s)
+github.com/AlDanial/cloc v 1.90  T=0.10 s (1184.9 files/s, 323697.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
 JSON                            14              0              0          27510
 Nim                             47            614            386           2611
-Markdown                        21            436              0            741
+Markdown                        22            449              0            756
 Crystal                         12             33              2            198
 Python                           6             51             65            108
 Bourne Shell                    10             36             14             74
 Lua                              2             16             24             55
 Ruby                             7              8             12             22
+Solidity                         1              0              0             11
 -------------------------------------------------------------------------------
-SUM:                           119           1194            503          31319
+SUM:                           121           1207            503          31345
 -------------------------------------------------------------------------------
 ```
 
@@ -55,7 +56,7 @@ SUM:                           119           1194            503          31319
 * Day 18: [Boiling Boulders](https://github.com/DestyNova/advent_of_code_2022/blob/main/18)
 * Day 19: [Not Enough Minerals](https://github.com/DestyNova/advent_of_code_2022/blob/main/19)
 * Day 20: [Grove Positioning System](https://github.com/DestyNova/advent_of_code_2022/blob/main/20)
-* Day 21: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/21)
+* Day 21: [Monkey Math](https://github.com/DestyNova/advent_of_code_2022/blob/main/21)
 * Day 22: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/22)
 * Day 23: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/23)
 * Day 24: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/24)
