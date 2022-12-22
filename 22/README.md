@@ -23,6 +23,8 @@ let moves: seq[Move] = collect:
 
 This example also shows the power of the [collect](https://nim-lang.org/docs/sugar.html#collect.m%2Cuntyped) macro in Nim.
 
+Given that there would be several extra "out of bounds" conditions beyond the usual grid-based puzzles, I decided to store the valid cube locations in a hashmap of `(int,int),bool`, where the bool signifies a wall. This made bounds-checking very easy: if it's not in the table, it's not on the cube. Initially I thought this would be inefficient compared to storing everything in a big array, but... it really isn't. I'll probably rely on this method in future too, especially where the bounds or extent of the array are initially unclear, or if the grid is expected to grow on subsequent turns (as has happened in some previous challenges).
+
 My first answer was wrong, despite getting the correct answer on the sample input. This was a bit baffling, but after a quick scan through the different cases I was handling, I realised I'd missed the case where we wrap around and encounter a wall on the other side -- once I added a check for this, part 1 was done.
 
 ## Part 2
