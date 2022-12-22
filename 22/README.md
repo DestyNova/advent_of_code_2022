@@ -31,7 +31,7 @@ My first answer was wrong, despite getting the correct answer on the sample inpu
 
 Another very difficult part 2, I think. First, there was the difficulty in wrapping my head around the cube movement. After a long period of trying to do mental rotations and translations, I ended up writing the sample cube layout on paper and folding it to see which edge transitions lined up where. A couple of helper functions -- `rotate` and `translate` made things a bit easier but still quite confusing.
 
-Eventually I got the correct answer on the sample input, but my program immediately crashing on the full input by trying to wrap into a nonexistent part of the cube.
+Eventually I got the correct answer on the sample input, but my program immediately crashed on the full input by trying to wrap into a nonexistent part of the cube.
 I opened the input file and zoomed out to try to understand what might be happening, and immediately realised that the geometry was completely different from the example case! This was __really__ annoying and a significant waste of time. This meant I would have to completely redo all of the face transitions. At least that was much quicker this time -- I printed a zoomed out sheet of the input file, cut it out and started folding to figure out the three critical bits of information for each case:
 
 1. Orientation: Which direction we'll be facing afterward
