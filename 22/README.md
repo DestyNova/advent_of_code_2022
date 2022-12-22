@@ -32,11 +32,12 @@ My first answer was wrong, despite getting the correct answer on the sample inpu
 Another very difficult part 2, I think. First, there was the difficulty in wrapping my head around the cube movement. After a long period of trying to do mental rotations and translations, I ended up writing the sample cube layout on paper and folding it to see which edge transitions lined up where. A couple of helper functions -- `rotate` and `translate` made things a bit easier but still quite confusing.
 
 Eventually I got the correct answer on the sample input, but my program immediately crashed on the full input by trying to wrap into a nonexistent part of the cube.
-I opened the input file and zoomed out to try to understand what might be happening, and immediately realised that the geometry was completely different from the example case! This was __really__ annoying and a significant waste of time. This meant I would have to completely redo all of the face transitions. At least that was much quicker this time -- I printed a zoomed out sheet of the input file, cut it out and started folding to figure out the three critical bits of information for each case:
+I opened the input file and zoomed out to try to understand what might be happening, and immediately realised that the geometry was completely different from the example case! This was __really__ annoying and a significant waste of time. This meant I would have to completely redo all of the face transitions. At least that was much quicker this time -- I printed a zoomed out sheet of the input file, cut it out and started folding to figure out the four critical bits of information for each case:
 
-1. Orientation: Which direction we'll be facing afterward
-2. Rotation: How many rotations of this face we'd need to line it up with the destination face
-3. Translation: The horizontal and vertical distance we'd need to move the rotated tile to line up with the rotated face
+1. Pre-orientation: Which direction we're facing now
+2. Post-orientation: which direction we'll be facing afterward
+3. Rotation: How many rotations of this face we'd need to line it up with the destination face
+4. Translation: The horizontal and vertical distance we'd need to move the rotated tile to line up with the rotated face
 
 ![Photo of my printed full input file and sample input, cut for folding into cubes](cube-sheets.jpg)
 
