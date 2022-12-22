@@ -1,6 +1,6 @@
 % curiously, the "sat" module produces an incorrect result (and in fact segfaults on my input, maybe due to the
 % size of the domain variables)
-import cp.
+import smt.
 import util.
 
 main =>
@@ -22,11 +22,13 @@ crunch(T) =>
   % cp somehow figures this one out even if we don't call "solve"???
   % sat doesn't, and throws a "free_var_not_allowed" error if I don't manually provide the domain of X
   % cp and mip return a correct answer incredibly fast (around 10 ms)
-  % solve([split], X),
+  % X :: 301..301,
+  solve([split], X),
   println(x2=X).
 
 calc("humn", _, T, X, P) =>
   println(humn=X),
+  P :: 0..10000000000000,
   P #= X.
 calc(Name, [K], T, X, P) =>
   Ki = K.to_int(),
@@ -61,6 +63,6 @@ calc(Name, [A,"/",B], T, X, P) =>
   calc(A,Am,T,X,L),
   calc(B,Bm,T,X,R),
   L mod R #= 0,  % this seems to be very important and allows cp to resolve everything without invoking the solver...
-  P #= L div R.
+  P * R #= L.
 
 parse_line(S) = split(S,": ").
