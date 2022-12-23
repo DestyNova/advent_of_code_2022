@@ -14,22 +14,22 @@ One thing I'm expecting to find more difficult in Nim/Crystal is complex input p
 * [2021](https://github.com/destynova/advent_of_code_2021) (mostly Haskell, with one in the magical [Picat](http://www.picat-lang.org)
 
 ## Current code stats with [cloc](https://github.com/AlDanial/cloc)
-```
 
-github.com/AlDanial/cloc v 1.90  T=0.10 s (1186.4 files/s, 329729.3 lines/s)
+```
+github.com/AlDanial/cloc v 1.90  T=0.10 s (1220.5 files/s, 331372.2 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-JSON                            15              0              0          28598
-Nim                             49            652            403           2814
-Markdown                        23            475              0            802
+JSON                            16              0              0          28636
+Nim                             51            685            422           2969
+Markdown                        24            494              0            829
 Crystal                         12             33              2            198
 Python                           6             51             65            108
 Bourne Shell                    10             36             14             74
 Lua                              2             16             24             55
 Ruby                             7              8             12             22
 -------------------------------------------------------------------------------
-SUM:                           124           1271            520          32671
+SUM:                           128           1323            539          32891
 -------------------------------------------------------------------------------
 ```
 
@@ -57,6 +57,6 @@ SUM:                           124           1271            520          32671
 * Day 20: [Grove Positioning System](https://github.com/DestyNova/advent_of_code_2022/blob/main/20)
 * Day 21: [Monkey Math](https://github.com/DestyNova/advent_of_code_2022/blob/main/21)
 * Day 22: [Monkey Map](https://github.com/DestyNova/advent_of_code_2022/blob/main/22)
-* Day 23: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/23)
+* Day 23: [Unstable Diffusion](https://github.com/DestyNova/advent_of_code_2022/blob/main/23)
 * Day 24: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/24)
 * Day 25: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/25)
