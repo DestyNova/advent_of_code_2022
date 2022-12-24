@@ -1,0 +1,128 @@
+import planner.
+import util.
+
+main =>
+  Input = read_file_lines(),
+  W = length(Input[1])-2,
+  H = length(Input)-2,
+
+  G = new_set(),
+  println(r1=Input[3].length),
+  println(w=W),
+  foreach(J in (2..length(Input)-1), I in (2..W+1))
+    C = Input[J,I],
+    println(c=[I,J,C]),
+    if(membchk(C, "<>v^")) then
+      G.put((I-1,J-1,C))
+    end,
+  end,
+
+  println(G),
+
+  % initial state. exit at W, H+1 (get there from (W,H) only)
+  S0 = {(0,0), W, H, G},
+  println(s0=S0),
+  best_plan(S0,Plan),
+  println(plan=Plan),
+  println(steps=Plan.length + 1).
+
+% we'll report one step too few
+final(S@{(I,J), W, H, G}) =>
+  % println(final_check=S),
+  % println(wat=apply_player_offset((1,1),(0,-1),W,H)),
+  not(G.has_key((I,J,'<')) || G.has_key((I,J,'>')) || G.has_key((I,J,'^')) || G.has_key((I,J,'v'))),
+  (I,J) == (W,H).
+
+% wait
+action({(I,J), W, H, G}, S1, Action, Cost) ?=>
+  % can't have blizzard here
+  Action=z,
+  G2 = step(G,W,H),
+  % println(current_plan()),
+  not(G2.has_key((I,J,'<')) || G2.has_key((I,J,'>')) || G2.has_key((I,J,'^')) || G2.has_key((I,J,'v'))),
+  Cost = 1,
+  S1 = {(I,J), W, H, G2}.
+
+% enter grid
+action({(0,0), W, H, G}, S1, Action, Cost) ?=>
+  Action=enter,
+  % can't have blizzard here
+  G2 = step(G,W,H),
+  (I2,J2) = (1,1),
+  not(G2.has_key((I2,J2,'<')) || G2.has_key((I2,J2,'>')) || G2.has_key((I2,J2,'^')) || G2.has_key((I2,J2,'v'))),
+  Cost = 1,
+  S1 = {(I2,J2), W, H, G2}.
+
+% move east
+action({P, W, H, G}, S1, Action, Cost) ?=>
+  Action=e,
+  P != (0,0),
+  % can't have blizzard here
+  G2 = step(G,W,H),
+  apply_player_offset(P, (1,0), W, H, (I2,J2)),
+  not(G2.has_key((I2,J2,'<')) || G2.has_key((I2,J2,'>')) || G2.has_key((I2,J2,'^')) || G2.has_key((I2,J2,'v'))),
+  Cost = 1,
+  S1 = {(I2,J2), W, H, G2}.
+
+% move west
+action({P, W, H, G}, S1, Action, Cost) ?=>
+  Action=w,
+  P != (0,0),
+  % can't have blizzard here
+  G2 = step(G,W,H),
+  apply_player_offset(P, (-1,0), W, H, (I2,J2)),
+  not(G2.has_key((I2,J2,'<')) || G2.has_key((I2,J2,'>')) || G2.has_key((I2,J2,'^')) || G2.has_key((I2,J2,'v'))),
+  Cost = 1,
+  S1 = {(I2,J2), W, H, G2}.
+
+% move north
+action({P, W, H, G}, S1, Action, Cost) ?=>
+  Action=n,
+  P != (0,0),
+  % can't have blizzard here
+  G2 = step(G,W,H),
+  apply_player_offset(P, (0,-1), W, H, (I2,J2)),
+  not(G2.has_key((I2,J2,'<')) || G2.has_key((I2,J2,'>')) || G2.has_key((I2,J2,'^')) || G2.has_key((I2,J2,'v'))),
+  Cost = 1,
+  S1 = {(I2,J2), W, H, G2}.
+
+% move south
+action({P, W, H, G}, S1, Action, Cost) ?=>
+  Action=s,
+  P != (0,0),
+  % can't have blizzard here
+  G2 = step(G,W,H),
+  apply_player_offset(P, (0,1), W, H, (I2,J2)),
+  not(G2.has_key((I2,J2,'<')) || G2.has_key((I2,J2,'>')) || G2.has_key((I2,J2,'^')) || G2.has_key((I2,J2,'v'))),
+  Cost = 1,
+  S1 = {(I2,J2), W, H, G2}.
+
+heuristic({(I,J), W, H, _}) = W-I + H-J - 1.
+
+getOffset('<') = (-1,0).
+getOffset('>') = (1,0).
+getOffset('^') = (0,-1).
+getOffset('v') = (0,1).
+
+apply_player_offset((I,J),(Dx,Dy),W,H,(I2,J2)) =>
+  (I2,J2) = (I+Dx, J+Dy),
+  I2 >= 1,
+  J2 >= 1,
+  I2 <= W,
+  J2 <= H.
+
+apply_offset((I,J),(Dx,Dy),W,H) = R =>
+  Ix = I + Dx + 2*W - 1,
+  Jx = J + Dy + 2*H - 1,
+  R = (Ix mod W + 1, Jx mod H + 1).
+
+step(G, W, H) = R =>
+  G2 = new_set(),
+  foreach(B in G.keys)
+    %println(b=B),
+    (I,J,D) = B,
+    (Dx, Dy) = getOffset(D),
+    (I2,J2) = apply_offset((I,J),(Dx,Dy),W,H),
+    G2.put((I2,J2,D))
+  end,
+  R = G2.
