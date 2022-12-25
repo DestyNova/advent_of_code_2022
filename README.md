@@ -16,20 +16,20 @@ One thing I'm expecting to find more difficult in Nim/Crystal is complex input p
 ## Current code stats with [cloc](https://github.com/AlDanial/cloc)
 
 ```
-github.com/AlDanial/cloc v 1.90  T=0.11 s (1165.1 files/s, 309666.3 lines/s)
+github.com/AlDanial/cloc v 1.90  T=0.12 s (1152.3 files/s, 302106.3 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
 JSON                            16              0              0          28636
-Nim                             53            733            434           3166
-Markdown                        25            520              0            871
+Nim                             55            781            470           3378
+Markdown                        26            526              0            879
 Crystal                         12             33              2            198
 Python                           6             51             65            108
 Bourne Shell                    11             38             14             77
 Lua                              2             16             24             55
 Ruby                             7              8             12             22
 -------------------------------------------------------------------------------
-SUM:                           132           1399            551          33133
+SUM:                           135           1453            587          33353
 -------------------------------------------------------------------------------
 ```
 
@@ -59,4 +59,4 @@ SUM:                           132           1399            551          33133
 * Day 22: [Monkey Map](https://github.com/DestyNova/advent_of_code_2022/blob/main/22)
 * Day 23: [Unstable Diffusion](https://github.com/DestyNova/advent_of_code_2022/blob/main/23)
 * Day 24: [Blizzard Basin](https://github.com/DestyNova/advent_of_code_2022/blob/main/24)
-* Day 25: [?](https://github.com/DestyNova/advent_of_code_2022/blob/main/25)
+* Day 25: [Full of Hot Air](https://github.com/DestyNova/advent_of_code_2022/blob/main/25)
