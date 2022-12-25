@@ -26,16 +26,22 @@ After a long time, I tried adding some weighting to the comparator function (`<`
 
 ## Alternate implementations
 
+### DFS / DP
+
 I revisited the DFS + dyamic programming approach and split the player/elephant moves into two completely separate segments, searching the player's moves first, then resetting time to 26 and running with the elephant but keeping the updated pressure and unturned valve set. Unfortunately it still gets stuck and the DP table fills up very quickly and is eventually forcibly killed by the kernel's OOM checker.
 
 **Update 2022-12-17 10:08:** I added the heuristic evaluation function to the DFS/DP implementation, to little effect, then realised the heuristic evaluation function was bad: it was pairing up the highest pressure valves and having the elephant and player turn them in sequence. This made sense for the BFS approach where I was doing them in parallel, but for the DFS solution I'd separated out the player and elephant phases into different vertices. The heuristic value then should always have the character with the most remaining time turn valves. To do this I added an offset to the player of `26 - remaining minutes + 1`, so even with 26 minutes remaining, the elephant goes first and turns the highest-value valve (downsorted valve index `i=0`), followed by the player (turning the `(i+playerOffset)`-most valuable valve, if he had enough remaining minutes. We then increment `i` and continue until we've run out of time and/or valves.
 
 This was still really slow, but produced the correct answer after about 30 seconds and eventually terminated, concluding that it was indeed correct, after 267 seconds.
 
+### De-interleaved state in BFS/A* version
+
 **Update 2022-12-18 19:14:** I tried adding the "de-interleaved" representation of vertices; that is, executing all the player's moves first, then resetting the clock and allowing the elephant to continue. That didn't work at all well with BFS for some reason, but while working on it I noticed that there needs to be a `visited` set when doing BFS (or Dijkstra, or A*...) to avoid re-exploring the same states over and over! That's a really silly oversight on my part. I added that to both versions, and it massively sped up the previous implementation, so it found the correct result within a few seconds, but kept exploring the state space because it couldn't prove there wasn't something better out there. Might need to get rid of the heuristic bit, except... no, it needs that to know when a provably optimal result has been found.
 
 **Update... 1 hour later:** Ok! With another improvement to the `getNeighbours` function in `part2_bfs_intpack`, namely only allowing the player and elephant to both turn a valve if both (rather than either) of the valves have a flow rate greater than zero. It turns out that this significantly reduces the search space and enabled the program to find the correct result and terminate after 343 seconds. Disabling the heuristic evaluation function completely in the unexplored state prioritisation more than halved the time although I'm not quite sure why. I shaved a bit more off by dropping the accumulation of readable move labels since we don't need them, bringing us down to 129 seconds. This is still 1000x slower than other solutions that have been posted, so... more optimisations and alternate approaches may still come.
 Sharing some of these optimisations brought the DFS/DP version down to 195 seconds.
+
+### Picat, as constraint problem
 
 **Update 2022-12-20 14:20:** After having some success with Picat for a similar day 19 problem, I spent ages encoding the day 16 problem for Picat's SAT solver, and it works for the sample input but produces a slightly too low result for my real input. And it takes about 6 minutes which is surprising given how it absolutely tore through the day 19 problem (which I was failing to solve in any kind of reasonable time in my Nim version).
 
