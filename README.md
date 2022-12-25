@@ -1,10 +1,10 @@
 # 🎄 Advent of Code 2022 🎄
 
-A collection of (attempted) solutions for the [Advent of Code 2022](https://adventofcode.com/2022/) programming puzzles. I'm not sure how this is going to go, but I'll probably try to use the [Nim](https://nim-lang.org) and maybe [Crystal](https://crystal-lang.org) programming languages which are quite friendly and straightforward to work with.
+My solutions for the [Advent of Code 2022](https://adventofcode.com/2022/) programming puzzles. Most of the first week's solutions were implemented in either [Nim](https://nim-lang.org), [Crystal](https://crystal-lang.org) or both, but after that I mostly stuck with Nim except for a few days where [Picat](http://www.picat-lang.org) came in handy (especially for its constraint solving abilities).
 
 I've mostly used Haskell in the past and really like it, but some puzzles required dynamic programming which is easy in impure procedural languages, but more complicated in Haskell -- finding a mutation-free solution can be very difficult, and working with the `ST` monad added a lot of noise and cognitive load for me. I'm sure with more practice that gets easier.
 
-One thing I'm expecting to find more difficult in Nim/Crystal is complex input parsing, which was generally made easy and elegant with Haskell's amazing [Parsec](https://wiki.haskell.org/Parsec) which is included in the standard library.
+One thing I found more awkward in Nim/Crystal is complex input parsing, which was usually easy and elegant thanks to Haskell's amazing [Parsec](https://wiki.haskell.org/Parsec), included in the standard library. After a couple of weeks of puzzling though, I learned to use Nim's `strscans/scanf` and `strutils/tokenize` functions which helped a lot. Picat seems a bit less polished from an input parsing point of view, so I mostly relied on `split`, although a few people mentioned to me that it has support for Prolog-style DCGs. I couldn't find much literature about how to use those properly in Picat, but I'll come back to them in future since I'll continue using Picat (and Nim) for at least the 2015 puzzles and maybe beyond.
 
 ## Previous challenges
 
