@@ -105,7 +105,7 @@ proc dfs(v: Vertex, limit: int): int =
 # IDA*
 proc search(start: Vertex): int =
   for i in 0..100:
-    let r = dfs(start, 1708 - i)
+    let r = dfs(start, 1750 - i)
     echo fmt"IDA* round {i}, max f: {r}"
     if r < 0:
       echo "Goal state reached"
