@@ -44,7 +44,9 @@ The lesson: when doing a deep graph search, do everything you can to remove redu
 
 ## Alternate implementations
 
-(none)
+**Update 2022-12-24 21:18:** I started working on an SMA* implementation, although to be honest I don't even understand the pseudocode in [Stuart Russell's 1992 paper](https://cse.sc.edu/~MGV/csce580f12/gradPres/Russell_ecai92-sma.pdf). I'm not sure how and where to "update" parent f-scores, nor how to restore deleted nodes that become needed again.
+
+There's a few Youtube videos mentioning it, but only in a very high level sense without explaining how you might do it in practice. Also, I noticed that most of the lecture material for uni courses on search and AI seem to be either a general restatement or outright plagiarism of Russell's paper and/or later presentation slides. Lame. I'll look up a few more papers and see if one of them makes sense.
 
 ## Thoughts
 
