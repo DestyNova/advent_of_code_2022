@@ -1,4 +1,4 @@
-import std/[strformat, strutils, sets, heapqueue, tables]
+import std/[strformat, strutils, sets, tables, deques]
 
 type
   Coord = (int,int)
@@ -7,10 +7,7 @@ type
   Hazards = seq[seq[bool]]
   Vertex = (int,int,int,int)  # player (x,y), num moves, stage 0/1/2
 
-const
-  Dirs = {'<': (-1,0), '>': (1,0), '^': (0,-1), 'v': (0,1)}.toTable
-  Inf = high(int)
-
+const Dirs = {'<': (-1,0), '>': (1,0), '^': (0,-1), 'v': (0,1)}.toTable
 var
   w, h: int
   states: seq[State]
@@ -73,54 +70,32 @@ proc getNeighbours(v: Vertex): seq[Vertex] =
 
   return vs
 
-proc getApproximateOptimum(v: Vertex): int =
-  let
-    (i,j,_,stage) = v
-    x = if stage == 1: i else: w-i-1
-    y = if stage == 1: j+1 else: h-j
-  x + y + max(0,(2-stage)*(w-1 + h+1))
-
-proc `<`(a, b: Vertex): bool =
-  let
-    aPossible = a[2] + getApproximateOptimum(a)
-    bPossible = b[2] + getApproximateOptimum(b)
-  aPossible < bPossible
-
-proc astar(start: Vertex): int =
+proc bfs(start: Vertex): int =
   var
-    minMoves = Inf
-    q = initHeapQueue[Vertex]()
+    q = initDeque[Vertex]()
     visited = initHashSet[Vertex]()
     t = 1
 
-  q.push(start)
+  q.addLast(start)
 
   while q.len > 0:
     let
-      v = q.pop
+      v = q.popFirst
       (i,j,moves,stage) = v
-      bestPossible = moves + getApproximateOptimum(v)
+      isGoal = (i,j) == (w-1,h) and stage >= 2
 
-    if t mod 200000 == 0:
+    if isGoal: return moves
+    if v in visited: continue
+    visited.incl(v)
+
+    if t mod 100000 == 0:
       let n = q.len
-      echo fmt"Step {t}: queue size: {n}, minMoves: {minMoves}, visited len: {visited.len}, current guess: {bestPossible}, stage: {stage}"
+      echo fmt"Step {t}: queue size: {n}, visited len: {visited.len}, stage: {stage}"
     inc t
 
-    if moves < minMoves and (i,j) == (w-1,h) and stage >= 3:
-      minMoves = moves
-      echo fmt"v: {v}, new minMoves: {minMoves}, bestPossible: {bestPossible}"
+    for u in getNeighbours(v): q.addLast(u)
 
-    if bestPossible < minMoves:
-      for u in getNeighbours(v):
-        let uPossible = moves + 1 + getApproximateOptimum(u)
-        if uPossible <= minMoves and u notin visited:
-          q.push(u)
-          if visited.len >= 1000000:
-            # echo "Clearing visited set."
-            discard visited.pop
-          visited.incl(u)
-
-  minMoves
+  high(int)
 
 var blizzards: HashSet[Blizzard]
 
@@ -136,9 +111,4 @@ for line in stdin.lines:
 
 states.add(blizzards)
 let s0: Vertex = (0,-1,0,0)
-# echo fmt"s0: {s0}"
-# echo fmt"w,h: {w}, {h}, neighbours of start node: {getNeighbours(s0)}"
-echo fmt"neighbours of near-end node: {getNeighbours((2,2,0,2))}"
-echo fmt"initial approximate optimum: {getApproximateOptimum(s0)}"
-let moves = astar(s0)
-echo moves
+echo bfs(s0)

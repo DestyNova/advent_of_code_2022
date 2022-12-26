@@ -22,15 +22,19 @@ main =>
   get_global_map(g1).put(rates,[V[2] : V in Input]),
 
   % initial state
-  S0 = {0, 26, 0, [0 : _ in 1..Valves.size()-1], ValveIndices.get("AA")},
+  S0 = {0, 26, 0, [0 : _ in 1..Valves.size()], ValveIndices.get("AA")},
   println(s0=S0),
-  best_plan_unbounded(S0,Plan),
+  best_plan(S0,Plan,Cost),
   writeln(Plan),
-  println("Intriguing...").
+  writeln(-Cost),
+  println(endut).
 
-final(S) =>
-  println(final_check=S),
-  S[1] == 1 && S[2] <= 1.
+final({P2, Mins, _, _, _}) =>
+  % if(S[1] == 1 && S[2] <= 1) then
+  %   println(final_check=S),
+  % end,
+  P2 == 1 && Mins <= 1.
+
 % turn a valve
 action({P2, Mins, Released, OpenedValves, Here}, S1, Action, Cost) ?=>
   V = get_global_map(g1).get(valves).get(Here),
@@ -40,33 +44,34 @@ action({P2, Mins, Released, OpenedValves, Here}, S1, Action, Cost) ?=>
   Mins > 1,
   % println(ok=1),
   Action = 0,
-  OpenedValves[Here] = 0,
+  OpenedValves[Here] == 0,
   Released2 = Released + (Mins - 1)*Flow,
-  S1 = {P2, Mins - 1, Released2, [cond(I == Here, 1, OpenedValves[Here]) : I in 1..OpenedValves.length()-1], Here},
-  Cost = 0. %-(Flow * (Mins - 1)).
+  OpenedValves2 = copy_term(OpenedValves),
+  OpenedValves2[Here] := 1,
+  S1 = {P2, Mins - 1, Released2, OpenedValves2, Here},
+  Cost = 500-(Flow * (Mins - 1)).
 
 % move
 action({P2, Mins, Released, OpenedValves, Here}, S1, Action, Cost) ?=>
   V = get_global_map(g1).get(valves).get(Here),
   ReachableValves = V[2],
 
-  % println(flow2),
   Mins > 1,
-  member(Action, 1..OpenedValves.len()-1),
-  % println(ok=2),
-  % OpenedValves[Here] = 0, could optimise this and refuse to allow moving on from unturned valve?
+  member(Action, 1..OpenedValves.len()),
   member(Action, ReachableValves),
 
   S1 = {P2, Mins - 1, Released, OpenedValves, Action},
-  Cost = 0.
+  Cost = 500.
 
 % P1 runs out of turns and passes over to P2
 action({P2, Mins, Released, OpenedValves, Here}, S1, Action, Cost) ?=>
   Start = get_global_map(g1).get(start_valve),
 
   Mins <= 1,
-  S1 = {1, 26, OpenedValves, Start},
-  Cost = 0.
+  P2 == 0,
+  Action = -1,  % not sure what to do here...
+  S1 = {1, 26, Released, OpenedValves, Start},
+  Cost = 500.
 
 parse_line(S) = R =>
   [_,V,_,_,RateS,_,_,_,_|Vs] = split(S),
