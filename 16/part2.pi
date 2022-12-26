@@ -83,10 +83,9 @@ calc(Valves, Start) = R =>
       Location #= PlayerLocation[I],
       NextLocation #= cond(Action #= 0, 1, Action),
 
-
       % update valve state
-      matrix_element(OpenValves, I, Location, IsOpened),
-      matrix_element(OpenValves, I+1, Location, WillBeOpen),
+      element(OpenValves[I], Location, IsOpened),
+      element(OpenValves[I+1], Location, WillBeOpen),
       % restrict valve opening
       IsOpened #= 1 #=> Action #!= 0,      % can't open already-open valve
       IsOpened #= 1 #=> WillBeOpen #= 1,   % open valve remains open

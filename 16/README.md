@@ -49,6 +49,14 @@ Picat's constraint solving language is amazing, but it's not really well suited 
 
 But that's what Picat's `planner` module is for. So I'm going to give that a try and see if it's easier to use (for this), able to produce the correct answer, and able to do so in reasonable time. That's a lot to ask but hey.
 
+### Picat, as planner problem
+
+**Update 2022-12-26 02:41:** I fixed some issues and made some improvements to the Picat planner solution, thanks to some tips from Håkan Kjellerstrand. It doesn't work properly with overall negative costs, so I tried adding a constant value onto each move so that runs can't end up with zero or negative costs. This allows the planner to do a binary search for the best solution. However, it doesn't finish in reasonable time, even on the sample input. Strange.
+
+### Nim, IDA*
+
+I also tried using IDA* and it also can't solve the sample input quickly. Maybe straight BFS will do it though? What I implemented before was really A*, and it's possible the heuristic doesn't help.
+
 ## Thoughts
 
 Definitely the most difficult puzzle so far this year. It's not that the concept of graph search is difficult; it's the actual details of how to represent the state in each vertex, which bits you care about, how to encode for storage in a DP table (e.g. some people managed to pack everything into an int, but I was already using one int for the valve set, another for the pressure released, an int8 for the current valve etc).
