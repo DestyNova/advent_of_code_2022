@@ -7,6 +7,6 @@ A fairly easy finisher problem for the Advent of Code 2022 puzzles. I was pretty
 
 ## Thoughts
 
-I had a great time this year, even though I didn't score well (highest part 2 ranking was 1208 on day 10). Last year the theme for me was a combination of "how and when to use dynamic programming" and "help, how do you mutate state properly in Haskell??". This year planning graph search was a strong theme, showing up in at lesat 3 of the puzzles (16, 19 and 24).
+I had a great time this year, even though I didn't score well (highest part 2 ranking was 1208 on day 10). Last year the theme for me was a combination of "how and when to use dynamic programming" and "help, how do you mutate state properly in Haskell??". This year planning graph search was a strong theme, showing up in at least 3 of the puzzles (16, 19 and 24).
 
 Looking forward to getting back to the 2015 puzzles -- I'll probably continue this pattern of switching between Nim and Picat since that was quite enjoyable. For the 2016 set I might try learning something new and weird like BQN.
