@@ -11,7 +11,7 @@ type
     forgotten: Table[State,int]
     parent: Vertex
 
-proc `$`(v: Vertex): string = fmt"Vertex(s: {v.s}, f: {v.f}, forgotten: {v.forgotten}, parent is nil: {isNil(v.parent)}"
+proc `$`(v: Vertex): string = fmt"Vertex(s: {v.s}, f: {v.f}, forgotten: {v.forgotten}, parent: {(if not isNil(v.parent): $v.parent.s else: $(-1))}"
 
 const Inf = high(int)
 const Dirs = {'<': (-1,0), '>': (1,0), '^': (0,-1), 'v': (0,1)}.toTable
@@ -79,11 +79,14 @@ proc getApproximateOptimum(v: State): int =
 
 proc `<`(a, b: Vertex): bool = a.f < b.f
 
+proc isGoal(s: State): bool = (s[0],s[1]) == (w-1,h) and s[3] >= 2
+
 # SMA*+: https://easychair.org/publications/open/TL2M
-proc search(start: State, nodeLimit: int = 300): int =
+proc search(start: State, nodeLimit: int = 100): int =
   var
     minMoves = Inf
     q = initHeapQueue[Vertex]() # open?
+    nodeCount = 1  # will this diverge from actual queue length?
     t = 1
 
   let
@@ -106,10 +109,15 @@ proc search(start: State, nodeLimit: int = 300): int =
     let
       (i,j,moves,stage) = node.s
       bestPossible = moves + getApproximateOptimum(node.s)
+
+    if isGoal(node.s): return moves
   
-    if t mod 50000 == 0:
+    if t mod 1000000 == 0:
       let n = q.len
-      echo fmt"Step {t}: queue size: {n}, minMoves: {minMoves}, current guess: {bestPossible}, stage: {stage}"
+      echo fmt"Step {t}: {node}, queue size: {n}, nodeCount: {nodeCount}, minMoves: {minMoves}, current guess: {bestPossible}, stage: {stage}"
+      # Debug: print the priority queue contents.
+      # for x in 0..q.len-1:
+      #   echo fmt"{x}: {q[x]}"
     inc t
 
     if moves < minMoves and (i,j) == (w-1,h) and stage >= 3:
@@ -122,6 +130,7 @@ proc search(start: State, nodeLimit: int = 300): int =
       # echo fmt"Found forgotten stuff. Maybe the ref thing does work? {node}"
       for u, uF in node.forgotten:
         q.push(Vertex(s: u, f: uF, forgotten: initTable[State,int](), parent: node))
+        inc nodeCount
       node.forgotten.clear
     else:
       for u in getNeighbours(node.s):
@@ -130,27 +139,46 @@ proc search(start: State, nodeLimit: int = 300): int =
           uForgotten = initTable[State,int]()
           v2 = Vertex(s:u, f:uF, forgotten:uForgotten, parent:node)
 
+        # not sure what it means to update the successor node's f-score here...
+        # unless it's referenced from another node's forgotten list or... something. Otherwise isn't this
+        # update discarded? Who is supposed to see the update?
+        # I think this is why the paper refers to a "successor list". I'm not a fan of that because we're
+        # discovering the successors lazily by exploring an infinite state/action graph, rather than a
+        # fixed grid.
+        # if not isGoal(u) and getNeighbours(u).len == 0: u.f = Inf
+
         # echo fmt"Found neighbour {v2}; adding to queue..."
-        q.push(v2)
+        if isGoal(u) or getNeighbours(u).len > 0 or (moves + 1 < nodeCount):
+          q.push(v2)
+          inc nodeCount
 
     # what's the point in updating the parents if they've been popped and never get stored elsewhere? wtf mate
     # actually I think they are, via a reference from the children. Weird. Either we handle that as a reference,
 
     # SMA*+ pruning... something is almost certainly wrong here.
-    while q.len > nodeLimit:
-      let pruned = q[q.len-1]
-      # (u, uF, uForgotten, uParent)
-      q.del(q.len-1)
+    while nodeCount > nodeLimit:
+      let first = q[0]
+      var pruneIdx = q.len-1
+      var pruned = q[pruneIdx]
+      # walk backwards from the end since heapqueue values aren't monotonically accessible...
+      while pruned.f == first.f:
+        dec pruneIdx
+        assert pruneIdx > 0
+        pruned = q[pruneIdx]
+      q.del(pruneIdx)
       # remove u from "successor list" of uParent, but... we don't have that?
       # add _state_ to forgotten f-cost table of the parent
       # echo fmt"About to prune: {pruned}"
       # But... after a while the root node ends up here, and it obviously doesn't have a parent node...
       # Adding a check for that case, but not sure if the behaviour is correct now. How is it supposed to work?
+      dec nodeCount
       if not isNil(pruned.parent):
         # echo fmt"pruning: {pruned}"
         pruned.parent.forgotten[pruned.s] = pruned.f
         pruned.parent.f = min(pruned.parent.forgotten.values.toSeq)  # update f(parent) to min of forgotten f-costs
-        if q.find(pruned.parent) == -1: q.push(pruned.parent)
+        if q.find(pruned.parent) == -1:
+          # echo fmt"Adding updated {pruned.parent} back to queue"
+          q.push(pruned.parent)
         # q.push(pruned.parent) # can we just do this instead of a linear scan??
       # else:
       #   echo "No idea what to do when pruning the root node... I'll just leave its forgotten set alone, but... eh..."
