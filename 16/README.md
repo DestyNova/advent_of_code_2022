@@ -1,4 +1,4 @@
-# Day 16: [Proboscidea Volcanium](https://adventofcode.com/2022/day/17)
+# Day 16: [Proboscidea Volcanium](https://adventofcode.com/2022/day/16)
 *Nim: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/16/part1.nim) (02:43:52, rank 2605), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/16/part2.nim) (08:20:36, rank 3222)*
 
 NAAAAAY!!!
