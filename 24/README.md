@@ -52,6 +52,12 @@ There's a few Youtube videos mentioning it, but only in a very high level sense 
 
 Applying the same changes to the A* version reduced its runtime to 1.82s. Not bad, but I know other people managed to get this done in 100ms or less. Whether they're still doing graph search or something else (like permutations and pruning) is unclear.
 
+Also, I did try to implement [Enhanced Simplified Memory-bounded A*](https://easychair.org/publications/open/TL2M) rather than SMA* because it seemed to produce good results in the paper and was simpler in some ways. However I ran into serious problems that seem to derive from the fact that ESMA* relies on having pointers everywhere and each node seems to maintain a "successor" list so that you can update f-values appropriately. This doesn't make as much sense to me when applied to infinite state/action graphs. I may have to give up on that implementation, which is a real shame. Also, the node limit "u" in the paper isn't handled consistently -- it's incremented and decremented in the main loop, but doesn't account for adding a parent node back onto the queue in the "Cull Worst Leaf" algorithm. When run on `sample2.txt`, the program should produce the result `54`, but instead gets stuck in an infinite loop exploring nodes with an f-score of around 41 (and that's with a node limit of 100, which actually settles on 1091 nodes in the priority queue, apparently forever).
+
+While working on that, I noticed that Nim's heapqueue implementation doesn't maintain monotonic ordering of all elements -- element 0 is the lowest, but beyond that it only maintains th invariants `a[k] <= a[2*k+1] and a[k] <= a[2*k+2]`. This means that my approach of popping and deleting the elemnt with the highest index was incorrect -- both here and in my initial A* implementation (maybe this is one reason it didn't work properly before).
+
+So I'm still on the lookout for a bounded-memory alternative to A* that's not a hundred times slower.
+
 ## Thoughts
 
 Another fun one. Not a good result according to the scoreboard, but I'm starting to get the hang of these ones.
