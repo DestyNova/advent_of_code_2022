@@ -73,6 +73,7 @@ proc bfs(start: Vertex): (int, seq[string]) =
     maxReleased = -Inf
     bestMoves: seq[string] = @[]
     q = initHeapQueue[Vertex]()
+    visited = initHashSet[Vertex]()
     step = 0
 
   q.push(start)
@@ -97,6 +98,9 @@ proc bfs(start: Vertex): (int, seq[string]) =
       # (myV, elephantV, released, mins, unturned, moves) = v
       (myV, elephantV, released, mins, unturned) = v
       bestPossible = released + getApproximateOptimum(unturned, mins)
+
+    if v in visited: continue
+    visited.incl(v)
 
     if released > maxReleased:
       maxReleased = released

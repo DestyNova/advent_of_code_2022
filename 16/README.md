@@ -34,11 +34,11 @@ I revisited the DFS + dyamic programming approach and split the player/elephant 
 
 This was still really slow, but produced the correct answer after about 30 seconds and eventually terminated, concluding that it was indeed correct, after 267 seconds.
 
-### De-interleaved state in BFS/A* version
+### De-interleaved state in A* version
 
-**Update 2022-12-18 19:14:** I tried adding the "de-interleaved" representation of vertices; that is, executing all the player's moves first, then resetting the clock and allowing the elephant to continue. That didn't work at all well with BFS for some reason, but while working on it I noticed that there needs to be a `visited` set when doing BFS (or Dijkstra, or A*...) to avoid re-exploring the same states over and over! That's a really silly oversight on my part. I added that to both versions, and it massively sped up the previous implementation, so it found the correct result within a few seconds, but kept exploring the state space because it couldn't prove there wasn't something better out there. Might need to get rid of the heuristic bit, except... no, it needs that to know when a provably optimal result has been found.
+**Update 2022-12-18 19:14:** I tried adding the "de-interleaved" representation of vertices; that is, executing all the player's moves first, then resetting the clock and allowing the elephant to continue. That didn't work at all well with A* for some reason, but while working on it I noticed that there needs to be a `visited` set when doing BFS (or Dijkstra, or A*...) to avoid re-exploring the same states over and over! That's a really silly oversight on my part. I added that to both versions, and it massively sped up the previous implementation, so it found the correct result within a few seconds, but kept exploring the state space because it couldn't prove there wasn't something better out there. Might need to get rid of the heuristic bit, except... no, it needs that to know when a provably optimal result has been found.
 
-**Update... 1 hour later:** Ok! With another improvement to the `getNeighbours` function in `part2_bfs_intpack`, namely only allowing the player and elephant to both turn a valve if both (rather than either) of the valves have a flow rate greater than zero. It turns out that this significantly reduces the search space and enabled the program to find the correct result and terminate after 343 seconds. Disabling the heuristic evaluation function completely in the unexplored state prioritisation more than halved the time although I'm not quite sure why. I shaved a bit more off by dropping the accumulation of readable move labels since we don't need them, bringing us down to 129 seconds. This is still 1000x slower than other solutions that have been posted, so... more optimisations and alternate approaches may still come.
+**Update... 1 hour later:** Ok! With another improvement to the `getNeighbours` function in `part2_astar_intpack`, namely only allowing the player and elephant to both turn a valve if both (rather than either) of the valves have a flow rate greater than zero. It turns out that this significantly reduces the search space and enabled the program to find the correct result and terminate after 343 seconds. Disabling the heuristic evaluation function completely in the unexplored state prioritisation more than halved the time although I'm not quite sure why. I shaved a bit more off by dropping the accumulation of readable move labels since we don't need them, bringing us down to 129 seconds. This is still 1000x slower than other solutions that have been posted, so... more optimisations and alternate approaches may still come.
 Sharing some of these optimisations brought the DFS/DP version down to 195 seconds.
 
 ### Picat, as constraint problem
@@ -56,6 +56,10 @@ But that's what Picat's `planner` module is for. So I'm going to give that a try
 ### Nim, IDA*
 
 I also tried using IDA* and it also can't solve the sample input quickly. Maybe straight BFS will do it though? What I implemented before was really A*, and it's possible the heuristic doesn't help.
+
+### Nim, PEA* (2022-12-27)
+
+I read about another "memory-concerned" A* variant called [Partial Expansion A*](https://www.aaai.org/Papers/AAAI/2000/AAAI00-142.pdf) and tried implementing it, since it's MUCH simpler than SMA* or SMA*+. It may be that I've left some important bits out, like removing and re-adding something in the "OPEN" set (aka priority queue).
 
 ## Thoughts
 
