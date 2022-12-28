@@ -76,7 +76,7 @@ proc `<`(a, b: Vertex): bool =
     (bP1, _, bReleased, bMins, bUnturned) = b
     aPossible = aReleased + getApproximateOptimum(aP1, aUnturned, aMins)
     bPossible = bReleased + getApproximateOptimum(bP1, bUnturned, bMins)
-  aPossible > bPossible
+  aPossible >= bPossible
 
 # highest result so far... 2082... 2297, 2543, 2615
 proc bfs(start: Vertex): int =

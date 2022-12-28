@@ -1,11 +1,11 @@
 import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue, tables, sugar, math]
 
-# state needs to encode whether it's player 1 or 2's turn, current valve, pressure released, mins remaining and unturned valves
-type State = (bool,int8,int,int8,int)
-type Vertex = object
-  s: State
-  f: int
-
+# state needs to encode my valve label, elephant's valve, pressure released, mins remaining and list of unturned
+type
+  State = (int8,int8,int,int,int)
+  Vertex = object
+    s: State
+    f: int
 const Inf = high(int)
 
 var valveNames: Table[string, (int, seq[string], int8)]
@@ -18,62 +18,66 @@ proc encodeValves(keys: seq[int8]): int =
   x
 
 proc holds(x: int, key: int8): bool = (x and (1 shl key)) != 0
-proc without(x: int, key: int8): int = x xor (1 shl key)
+proc without(x: int, keys: seq[int8]): int =
+  var y = x
+  for k in keys:
+    y = y xor (1 shl k)
+  y
 
 proc getNeighbours(v: State): seq[State] =
   let
-    (p1, valve, released, mins, unturned) = v
-    (flowRate, ns) = valves[valve]
+    (myV, elephantV, released, mins, unturned) = v
+    (flowRate1, ns1) = valves[myV]
+    (flowRate2, ns2) = valves[elephantV]
     m = mins - 1
 
-  var
-    vs = newSeq[State]()
-    noActions = true
+  if m < 1: return
 
-  # turn a valve
-  if m >= 2 and unturned.holds(valve) and flowRate > 0:
-    vs.add((p1, valve, m*flowRate + released, m, unturned.without(valve)))
-    noActions = false
-  # move
-  if m >= 3:
-    for n in ns:
-      vs.add((p1, n, released, m, unturned))
-    noActions = false
+  var vs = newSeq[State]()
 
-  if noActions and p1:
-    let
-      startValve = valveNames["AA"][2]
-      p2Start: State = (false,startValve,released,int8(26),unturned)
-    vs.add(p2Start)
+  # we both turn a valve, but it must be two different valves, and neither can be useless...
+  if unturned.holds(myV) and unturned.holds(elephantV) and myV != elephantV and (valves[myV][0] > 0 and valves[elephantV][0] > 0):
+    vs.add((myV, elephantV, m*flowRate1 + m*flowRate2 + released, m, unturned.without(@[myV, elephantV])))
+
+  # otherwise, at least one of us moves
+  # add my reachable paths
+  for n in ns1:
+    # I move to valve n and elephant turns this valve
+    if unturned.holds(elephantV) and valves[elephantV][0] > 0:
+      vs.add((n, elephantV, m*flowRate2 + released, m, unturned.without(@[elephantV])))
+    # or we both move to another valve, but only if there's enough time
+    elif m > 1:
+      for n2 in ns2:
+        # vs.add((n, n2, released, m, unturned, moves & @[fmt"> {n}, > {n2}"]))
+        vs.add((n, n2, released, m, unturned))
+  # I turn this valve and elephant moves to valve n2
+  for n2 in ns2:
+    if unturned.holds(myV) and valves[myV][0] > 0:
+      vs.add((myV, n2, m*flowRate1 + released, m, unturned.without(@[myV])))
 
   return vs
 
 proc getApproximateOptimum(s: State): int =
   let
-    (p1, _, released, mins, unturned) = s
+    mins = s[3]
+    unturned = s[4]
     rates = collect(
-      for k in 0..63:
-        if unturned.holds(int8(k)):
-          (k,valves[int8(k)][0])
-      ).sortedByIt(-it[1])
-
+    for k in 0..63:
+      if unturned.holds(int8(k)):
+        valves[int8(k)][0]
+    ).sortedByIt(-it)
+  # let rates = unturned.mapIt(valves[it][0]).sortedByIt(-it)
+  # echo fmt"rates: {rates}"
   var
     acc = 0
     m = mins - 1
-    eM = 25
     i = 0
-    playerOffset = if p1: 26-m else: 0
     n = len(rates)
-  while i < n and (m > 0 or eM > 0):
-    if p1:
-      # elephant probably has more minutes
-      acc += rates[i][1]*eM
-    if m > 0 and i + playerOffset < n:
-      acc += rates[i+playerOffset][1]*m
+  while i < n - 1 and m > 0:
+    acc += rates[i]*m + rates[i+1]*m
     m -= 2
-    eM -= 2
-    i += 1
-  released + acc
+    i += 2
+  acc
 
 # greedy approximation...
 proc `<`(a, b: Vertex): bool = a.f > b.f
@@ -89,7 +93,7 @@ proc search(start: State): int =
   q.push(Vertex(s: start, f: getApproximateOptimum(start)))
 
   while q.len > 0:
-    if step mod 1000000 == 0:
+    if step mod 1000 == 0:
       let n = q.len
       echo fmt"Step {step}: queue size: {n}, maxReleased: {maxReleased}"
       echo fmt"Visited len: {visited.len}"
@@ -112,24 +116,30 @@ proc search(start: State): int =
 
       for u in getNeighbours(v.s):
         let
-          state = u
-          (_, _, uReleased, _, _) = state
-          uF = getApproximateOptimum(state)
-          inClosed = state in visited
+          (_, _, uReleased, _, _) = u
+          uF = uReleased + getApproximateOptimum(u)
+          v2 = Vertex(s: u, f: uF)
+          inClosed = u in visited
+          # inOpen = q.find(v2) == -1
         # echo fmt"u: {u}"
         if uReleased > maxReleased:
           maxReleased = uReleased
           # echo fmt"new best neighbour u: {u}, maxReleased: {maxReleased}, bestPossible estimate was: {bestPossible}"
-        if inClosed and visited[state] < uF:
+        # if not inClosed and not inOpen:
+        #   # echo "Not in closed or open"
+        #   q.push(Vertex(s:u, f:uF))
+        elif inClosed and visited[u] < uF:
           # echo "Found updatable successor in visited set"
-          visited.del(state)
+          visited.del(u)
+          q.push(v2)
         elif not inClosed and uF >= v.f:
           # should this not be f: state.released + getApproximateOptimum(state)? i.e. g(state)?
           # yes... updated getApproximateOptimum
-          # echo fmt"Pushing child {state} with f: {uF}"
-          q.push(Vertex(s: state, f: uF))
+          # echo fmt"Pushing child {u} with f: {uF}"
+          # if inOpen: q.push(v2)
+          if q.find(v2) == -1: q.push(v2)
         elif not inClosed:
-          # echo fmt"Not pushing {state} with f: {uF} not better than {v.f}"
+          # echo fmt"Not pushing {u} with f: {uF} not better than {v.f}"
           discarded = true
           bestDiscarded = max(bestDiscarded, uF)
 
@@ -170,7 +180,7 @@ echo valves
 let
   # start: State = ("AA","AA",0,26,valves.keys.toSeq.toHashSet,moves)
   startValve = valveNames["AA"][2]
-  start: State = (true,startValve,0,int8(26),encodeValves(valves.keys.toSeq))
+  start = (startValve,startValve,0,26,encodeValves(valves.keys.toSeq))
 echo fmt"neighbours of start node: {getNeighbours(start)}"
 echo fmt"initial approximate optimum: {getApproximateOptimum(start)}"
 echo fmt"starting unturned: {valves.keys.toSeq}"
