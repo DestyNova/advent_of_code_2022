@@ -81,35 +81,34 @@ calc(Valves, Start) = R =>
       % Actions: 0 = turn valve, 1..N = go to valve number N
       Action #= Actions[I],
       Location #= PlayerLocation[I],
-      NextLocation #= cond(Action #= 0, 1, Action),
 
-      % update valve state
-      element(OpenValves[I], Location, IsOpened),
-      element(OpenValves[I+1], Location, WillBeOpen),
       % restrict valve opening
+      element(Location, OpenValves[I], IsOpened),
       IsOpened #= 1 #=> Action #!= 0,      % can't open already-open valve
       IsOpened #= 1 #=> WillBeOpen #= 1,   % open valve remains open
       Action #= 0 #=> WillBeOpen #= 1,     % actually open the valve
+      % update valve state
+      % element(Location, OpenValves[I+1], WillBeOpen),
 
       % how do I specify that all other values from the previous timestep will carry over,
       % without walking the current/future valve list and using matrix_element on both lists?
       foreach(L in 1..N)
         % without doing this, the next timestep's open valve set could just end up with any values...
-        matrix_element(OpenValves, I, L, WasOpen),
+        [WasOpen, OpenNext] :: 0..1,
+        element(L, OpenValves[I], WasOpen),
         OpenNext #= cond(L #= Location, WillBeOpen, WasOpen),
-        matrix_element(OpenValves, I+1, L, OpenNext),
+        element(L, OpenValves[I+1], OpenNext),
       end,
 
       element(Location, Rates, Rate),
       % Rate #= 0 #=> Action #!= 0,             % don't open a useless valve (maybe drop this?)
-      Mins #< 2 #=> Action #!= 0,                        % opening valve with 1 min left is meaningless
+      M #<= 1 #=> Action #!= 0,                        % opening valve with 1 min left is meaningless
 
       % movement
+      NextLocation #= cond(Action #= 0, Location, Action),
       matrix_element(Adjacent, Location, NextLocation, X),
       Action #> 0 #=> X #= 1,    %  can only move to adjacent position
-
-      % update player location if needed
-      PlayerLocation[I+1] #= cond(Action #> 0 #/\ M #> 1, NextLocation, Location),
+      PlayerLocation[I+1] #= NextLocation,
 
       % update pressure released
       Action #= 0 #=> PressureReleased[I+1] #= PressureReleased[I] + Rate*(M-1),
@@ -120,7 +119,7 @@ calc(Valves, Start) = R =>
   println("ready"),
   TotalScore #= PressureReleased[Steps+1],
   %println(openValves=OpenValves),
-  solve([inout,split,$max(TotalScore),$report(printf("TotalScore: %d\n",TotalScore))], Actions),
+  solve([ff,split,$max(TotalScore),$report(printf("TotalScore: %d\n",TotalScore))], Actions),
   println(actions2=Actions),
   println(pressure=PressureReleased),
   println(location=PlayerLocation),
