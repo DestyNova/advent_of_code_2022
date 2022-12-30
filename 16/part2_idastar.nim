@@ -1,7 +1,7 @@
-import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue, tables, sugar, math]
+import std/[algorithm, sequtils, strformat, strscans, strutils, sets, tables, sugar, math]
 
 # vertex needs to encode whether it's player 1 or 2's turn, current valve, pressure released, mins remaining and unturned valves
-type Vertex = (bool,int8,int,int8,int)
+type State = (bool,int8,int,int8,int)
 const Inf = high(int)
 
 var valveNames: Table[string, (int, seq[string], int8)]
@@ -16,14 +16,14 @@ proc encodeValves(keys: seq[int8]): int =
 proc holds(x: int, key: int8): bool = (x and (1 shl key)) != 0
 proc without(x: int, key: int8): int = x xor (1 shl key)
 
-proc getNeighbours(v: Vertex): seq[Vertex] =
+proc getNeighbours(v: State): seq[State] =
   let
     (p1, valve, released, mins, unturned) = v
     (flowRate, ns) = valves[valve]
     m = mins - 1
 
   var
-    vs = newSeq[Vertex]()
+    vs = newSeq[State]()
     noActions = true
 
   # turn a valve
@@ -39,7 +39,7 @@ proc getNeighbours(v: Vertex): seq[Vertex] =
   if noActions and p1:
     let
       startValve = valveNames["AA"][2]
-      p2Start: Vertex = (false,startValve,released,int8(26),unturned)
+      p2Start: State = (false,startValve,released,int8(26),unturned)
     vs.add(p2Start)
 
   return vs
@@ -69,43 +69,33 @@ proc getApproximateOptimum(p1: bool, unturned: int, mins: int): int =
     i += 1
   acc
 
-# greedy approximation...
-proc `<`(a, b: Vertex): bool =
-  let
-    (aP1, _, aReleased, aMins, aUnturned) = a
-    (bP1, _, bReleased, bMins, bUnturned) = b
-    aPossible = aReleased + getApproximateOptimum(aP1, aUnturned, aMins)
-    bPossible = bReleased + getApproximateOptimum(bP1, bUnturned, bMins)
-  aPossible > bPossible
-
-proc dfs(v: Vertex, limit: int): int =
+proc dfs(v: State, limit: int, dp: var Table[State,int]): int =
   let
     (p1, _, released, mins, unturned) = v
-    f = released + getApproximateOptimum(p1, unturned, mins)
-    isGoal = mins <= 1 and not p1
+    h = getApproximateOptimum(p1, unturned, mins)
+    f = released + h
+    isGoal = released >= limit
 
   # echo fmt"dfs: {v}, f: {f}, isGoal: {isGoal}, limit: {limit}"
   if isGoal: return -released
   if f < limit: return f
+  if v in dp: return dp[v]
 
-  var maxReleased = low(int)
-  if released > maxReleased:
-    maxReleased = released
-    # echo fmt"new best v: {v}, maxReleased: {maxReleased}"
-  # echo fmt"{v} has these neighbours: {getNeighbours(v)}"
+  var maxReleased = released
   for u in getNeighbours(v):
-    # echo fmt"dfs, recursing into {u}"
-    let uF = dfs(u, limit)
+    let uF = dfs(u, limit, dp)
     if uF < 0: return uF  # reached goal
     elif uF > maxReleased: maxReleased = uF
 
-  # echo fmt"dfs: {v}, returning {maxReleased}"
+  dp[v] = maxReleased
   maxReleased
 
 # IDA*
-proc search(start: Vertex): int =
-  for i in 0..100:
-    let r = dfs(start, 1708 - i)
+proc search(start: State): int =
+  for i in 0..300:
+    var dp = initTable[State, int]()
+    # Well... it works if we start from the correct answer. Otherwise it takes too much time and space.
+    let r = dfs(start, 2615 - i, dp)
     echo fmt"IDA* round {i}, max f: {r}"
     if r < 0:
       echo "Goal state reached"
@@ -139,9 +129,9 @@ for k,v in valveNames:
 echo valves
 
 let
-  # start: Vertex = ("AA","AA",0,26,valves.keys.toSeq.toHashSet,moves)
+  # start: State = ("AA","AA",0,26,valves.keys.toSeq.toHashSet,moves)
   startValve = valveNames["AA"][2]
-  start: Vertex = (true,startValve,0,int8(26),encodeValves(valves.keys.toSeq))
+  start: State = (true,startValve,0,int8(26),encodeValves(valves.keys.toSeq))
 echo fmt"neighbours of start node: {getNeighbours(start)}"
 echo fmt"initial approximate optimum: {getApproximateOptimum(true,encodeValves(valves.keys.toSeq), 26)}"
 echo fmt"initial approximate optimum: {getApproximateOptimum(false,encodeValves(valves.keys.toSeq), 26)}"
