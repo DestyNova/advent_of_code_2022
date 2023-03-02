@@ -59,8 +59,6 @@ proc getApproximateOptimum(unturned: int, mins: int): int =
       if unturned.holds(int8(k)):
         valves[int8(k)][0]
     ).sortedByIt(-it)
-  # let rates = unturned.mapIt(valves[it][0]).sortedByIt(-it)
-  # echo fmt"rates: {rates}"
   var
     acc = 0
     m = mins - 1
@@ -72,7 +70,6 @@ proc getApproximateOptimum(unturned: int, mins: int): int =
     i += 2
   acc
 
-# greedy approximation...
 proc `<`(a, b: Vertex): bool =
   # a[2] >= b[2]
   let
@@ -80,7 +77,6 @@ proc `<`(a, b: Vertex): bool =
     bPossible = 1*b[2] + 1*getApproximateOptimum(b[4], b[3])
   aPossible >= bPossible
 
-# highest result so far... 2082... 2297, 2543, 2615
 proc bfs(start: Vertex): (int, seq[string]) =
   var
     maxReleased = -Inf

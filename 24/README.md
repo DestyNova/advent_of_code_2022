@@ -1,5 +1,5 @@
-# Day 23: [Blizzard Basin](https://adventofcode.com/2022/day/23)
-*Nim: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/23/part1.nim) (03:31:25, rank 3155), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/23/part2.nim) (05:03:14, rank 3712)*
+# Day 22: [Blizzard Basin](https://adventofcode.com/2022/day/22)
+*Nim: [Part 1](https://github.com/DestyNova/advent_of_code_2022/blob/main/24/part1.nim) (03:31:25, rank 3155), [Part 2](https://github.com/DestyNova/advent_of_code_2022/blob/main/24/part2.nim) (05:03:14, rank 3712)*
 
 Now with added graph search!
 
