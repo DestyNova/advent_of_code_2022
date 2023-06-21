@@ -15,6 +15,8 @@ Anyway, it took another hour or so to encode the problem in Picat's domain const
 
 Eventually when I got it running, I was astounded to discover that it produced the correct answer in about 22 seconds. A bit of optimisation brought it down to 12 seconds -- this consisted of the usual trick for Picat: define a range for every domain variable and try to reduce them their narrowest.
 
+**Update 2023-06-09:** I watched [this video](https://www.youtube.com/watch?v=5rb0vvJ7NCY) which describes a series of really nice optimisations and applied a few of them which got part 1 down to 14.262 seconds in Nim.
+
 ## Part 2
 
 This is where the magic of Picat comes in: a tiny modification to the source code produced a program that outputs the correct result in about 9 seconds. My split time was about 5 minutes. Applying the same optimisations as in part 1 brought it down to about 6 seconds. I'm amazed at how easily Picat can take on problems like this, without having to specify how to search or provide heuristic guidance (which I tried in my Nim implementation, but obviously got something wrong).

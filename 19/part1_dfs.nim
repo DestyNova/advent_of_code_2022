@@ -2,6 +2,7 @@ import std/[algorithm, sequtils, strformat, strscans, strutils, sets, heapqueue,
 
 # vertex needs to encode: turns left, ore, clay, obsidian, geodes, ore robots, clay robots, obsidian robots, geode robots
 type Vertex = (int, int, int, int, int, int, int, int, int, string)
+type CacheEntry = (int, int, int, int, int, int, int, int, int)
 type Blueprint = object
     id: int
     oreOre: int
@@ -36,33 +37,35 @@ proc getNeighbours(v: Vertex, blueprint: Blueprint): seq[Vertex] =
     vs.add(((t, ore + oreR - blueprint.geodeOre, clay + clayR, obsidian + obsidianR - blueprint.geodeObsidian, geodes + geodeR, oreR, clayR, obsidianR, geodeR + 1, moves & ", make geode robot")))
   return vs
 
-proc getApproximateOptimum(v: Vertex, b: Blueprint): int =
+proc getApproximateOptimum(v: Vertex): int =
   # uhh
-  v[1] + v[2] + v[3] + v[4] + v[0] * (v[5] + v[6] + v[7] + v[8])
+  let (turns, ore, clay, obsidian, geodes, oreR, clayR, obsidianR, geodeR, moves) = v
+  geodes + turns * geodeR + ceil(turns*(turns-1)/2).int
+  #v[4] + movesLeft * (((v[5]+1) div 8) + ((v[6]+1) div 4) + ((v[7]+1) div 2) + v[8])
 
 # greedy approximation...
 proc `<`(a, b: Vertex): bool =
   # a[2] >= b[2]
-  # let
-  #   aPossible = 1*a[2] + 1*getApproximateOptimum(a[4], a[3])
-  #   bPossible = 1*b[2] + 1*getApproximateOptimum(b[4], b[3])
   let
-    aPossible = a[0] + a[1] + a[2] + a[3] + a[4]
-    bPossible = b[0] + b[1] + b[2] + a[3] + a[4]
+    aPossible = getApproximateOptimum(a)
+    bPossible = getApproximateOptimum(b)
+  # let
+  #   aPossible = a[0] + a[1] + a[2] + a[3] + a[4]
+  #   bPossible = b[0] + b[1] + b[2] + a[3] + a[4]
   aPossible > bPossible
 
-var dp = initTable[Vertex, (int, string)]()
-var maxGeodes = 0
+var maxGeodes: int = 0
 var bestMoves: string = ""
 
-proc dfs(v: Vertex, blueprint: Blueprint): (int, string) =
+proc dfs(v: Vertex, blueprint: Blueprint, dp: var Table[CacheEntry, (int,string)]): (int, string) =
   # echo fmt"Running DFS on blueprint {blueprint.id}"
 
   let (turns, ore, clay, obsidian, geodes, oreR, clayR, obsidianR, geodeR, moves) = v
-  if v in dp: return dp[v]
+  let cacheEntry: CacheEntry = (turns, ore, clay, obsidian, geodes, oreR, clayR, obsidianR, geodeR)
+  let h = getApproximateOptimum(v)
 
-  elif geodes + getApproximateOptimum(v, blueprint) < maxGeodes:
-    return (geodes, moves)
+  if cacheEntry in dp: return dp[cacheEntry]
+  if h <= maxGeodes: return (0, moves)
 
   if geodes > maxGeodes:
     maxGeodes = geodes
@@ -71,7 +74,7 @@ proc dfs(v: Vertex, blueprint: Blueprint): (int, string) =
 
   for state in getNeighbours(v, blueprint):
     let
-      (uGeodes, uMoves) = dfs(state, blueprint)
+      (uGeodes, uMoves) = dfs(state, blueprint, dp)
     # echo fmt"u: {u}"
     if uGeodes > maxGeodes:
       maxGeodes = uGeodes
@@ -80,8 +83,8 @@ proc dfs(v: Vertex, blueprint: Blueprint): (int, string) =
 
   let res = (maxGeodes, bestMoves)
 
-  if turns > 2:
-    dp[v] = res
+  if turns > 1:
+    dp[cacheEntry] = res
   res
 
 for line in stdin.lines:
@@ -97,7 +100,7 @@ for line in stdin.lines:
   if not scanf(line, "Blueprint $i: Each ore robot costs $i ore. Each clay robot costs $i ore. Each obsidian robot costs $i ore and $i clay. Each geode robot costs $i ore and $i obsidian.", blueprintId, oreOre, clayOre, obsidianOre, obsidianClay, geodeOre, geodeObsidian):
     raise newException(ValueError, fmt"Bad input: {line}")
 
-  let blueprint = Blueprint(id: blueprintId, oreOre: oreOre, clayOre: clayOre, obsidianOre: obsidianOre, obsidianClay: obsidianClay, geodeOre: geodeOre, geodeObsidian: geodeObsidian)
+  let blueprint = Blueprint(id: int(blueprintId), oreOre: int(oreOre), clayOre: int(clayOre), obsidianOre: int(obsidianOre), obsidianClay: int(obsidianClay), geodeOre: int(geodeOre), geodeObsidian: int(geodeObsidian))
   # echo line
   # echo blueprint
   blueprints.add(blueprint)
@@ -105,7 +108,13 @@ for line in stdin.lines:
 echo blueprints
 
 let
-  start: Vertex = (24, 0, 0, 0, 0, 1, 0, 0, 0, "start")
+  start: Vertex = (25, 0, 0, 0, 0, 1, 0, 0, 0, "start")
 echo fmt"neighbours of start node: {getNeighbours(start, blueprints[0])}"
-echo fmt"initial approximate optimum: {getApproximateOptimum(start, blueprints[0])}"
-echo dfs(start, blueprints[1])
+echo fmt"initial approximate optimum: {getApproximateOptimum(start)}"
+
+let res = collect:
+  for b in blueprints:
+    var dp = initTable[CacheEntry, (int, string)]()
+    dfs(start, b, dp)[0] * b.id
+
+echo res.sum

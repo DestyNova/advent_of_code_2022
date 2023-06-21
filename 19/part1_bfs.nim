@@ -54,7 +54,7 @@ proc `<`(a, b: Vertex): bool =
 
 # highest result so far... 2082... 2297, 2543, 2615
 proc bfs(start: Vertex): (int, string) =
-  echo "Running BFS on blueprint {blueprint.id}"
+  echo fmt"Running BFS on blueprint {blueprint.id}"
 
   var
     maxGeodes = 0
