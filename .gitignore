@@ -2,3 +2,5 @@ part*
 !part*.*
 target
 __*
+input
+input_*

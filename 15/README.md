@@ -56,5 +56,5 @@ Summary
 
 Program           | Compile time (s) | Mean runtime (ms) | Max RSS (kb) | Source bytes | Source gzipped
 ---               | ---              | ---               | ---          | ---          | ---
-part2_nim         | 1.4              | 2.070             | 1668         | 1501         | 703
-part2_simpler_nim | 1.4              | 1.940             | 1656         | 1105         | 556
+part2_nim         | 1.4              | 2070              | 1668         | 1501         | 703
+part2_simpler_nim | 1.4              | 1940              | 1656         | 1105         | 556

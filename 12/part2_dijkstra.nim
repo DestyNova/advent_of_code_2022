@@ -43,7 +43,7 @@ let
   dest = find('E')
 
 type PrioVert = (int, int)
-proc `<`(a, b: PrioVert): bool = a[0] < b[0]
+proc `<`(a, b: PrioVert): bool = a[1] < b[1]
 
 proc djikstra(s: Vertex): seq[int] =
   var

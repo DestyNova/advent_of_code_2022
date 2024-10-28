@@ -82,7 +82,6 @@ proc getApproximateOptimum(s: State): int =
 # greedy approximation...
 proc `<`(a, b: Vertex): bool = a.f > b.f
 
-# highest result so far... 2082... 2297, 2543, 2615
 proc search(start: State): int =
   var
     maxReleased = -Inf
